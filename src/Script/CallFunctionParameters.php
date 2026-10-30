@@ -58,7 +58,7 @@ final readonly class CallFunctionParameters
         $data = [
             'functionDeclaration' => $this->functionDeclaration,
             'awaitPromise' => $this->awaitPromise,
-            'target' => $this->target->toArray(),
+            'target' => Wire::encode($this->target),
         ];
         if ($this->arguments !== null) {
             $data['arguments'] = Wire::encode($this->arguments);
@@ -67,10 +67,10 @@ final readonly class CallFunctionParameters
             $data['resultOwnership'] = $this->resultOwnership->value;
         }
         if ($this->serializationOptions !== null) {
-            $data['serializationOptions'] = $this->serializationOptions->toArray();
+            $data['serializationOptions'] = Wire::encode($this->serializationOptions);
         }
         if ($this->this_ !== null) {
-            $data['this'] = $this->this_->toArray();
+            $data['this'] = Wire::encode($this->this_);
         }
         if ($this->userActivation !== null) {
             $data['userActivation'] = $this->userActivation;

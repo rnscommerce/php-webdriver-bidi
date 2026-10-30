@@ -35,7 +35,7 @@ final readonly class ElementClipRectangle implements ClipRectangle
     {
         return [
             'type' => 'element',
-            'element' => $this->element->toArray(),
+            'element' => Wire::encode($this->element),
         ];
     }
 }

@@ -46,10 +46,10 @@ final readonly class CreateUserContextParameters
             $data['acceptInsecureCerts'] = $this->acceptInsecureCerts;
         }
         if ($this->proxy !== null) {
-            $data['proxy'] = $this->proxy->toArray();
+            $data['proxy'] = Wire::encode($this->proxy);
         }
         if ($this->unhandledPromptBehavior !== null) {
-            $data['unhandledPromptBehavior'] = $this->unhandledPromptBehavior->toArray();
+            $data['unhandledPromptBehavior'] = Wire::encode($this->unhandledPromptBehavior);
         }
         return $data;
     }

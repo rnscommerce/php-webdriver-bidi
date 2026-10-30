@@ -36,7 +36,7 @@ final readonly class EvaluationResultException implements EvaluationResult
     {
         return [
             'type' => 'exception',
-            'exceptionDetails' => $this->exceptionDetails->toArray(),
+            'exceptionDetails' => Wire::encode($this->exceptionDetails),
             'realm' => $this->realm,
         ];
     }

@@ -44,13 +44,13 @@ final readonly class JavascriptLogEntry implements Entry
     {
         $data = [
             'level' => $this->level->value,
-            'source' => $this->source->toArray(),
+            'source' => Wire::encode($this->source),
             'text' => $this->text,
             'timestamp' => $this->timestamp,
             'type' => 'javascript',
         ];
         if ($this->stackTrace !== null) {
-            $data['stackTrace'] = $this->stackTrace->toArray();
+            $data['stackTrace'] = Wire::encode($this->stackTrace);
         }
         return $data;
     }

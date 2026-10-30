@@ -59,7 +59,7 @@ final readonly class NodeProperties
             'childNodeCount' => $this->childNodeCount,
         ];
         if ($this->attributes !== null) {
-            $data['attributes'] = Wire::encode($this->attributes);
+            $data['attributes'] = Wire::encodeMap($this->attributes);
         }
         if ($this->children !== null) {
             $data['children'] = Wire::encode($this->children);
@@ -77,7 +77,7 @@ final readonly class NodeProperties
             $data['nodeValue'] = $this->nodeValue;
         }
         if ($this->shadowRoot !== null) {
-            $data['shadowRoot'] = $this->shadowRoot->toArray();
+            $data['shadowRoot'] = Wire::encode($this->shadowRoot);
         }
         return $data;
     }

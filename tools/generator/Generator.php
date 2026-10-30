@@ -412,17 +412,16 @@ final class Generator
     }
 
     /**
-     * Encodes a value for the wire; a list, a map or a choice is left to Wire.
+     * Encodes a value for the wire; a record, a union, a list or a choice is left to Wire.
      *
      * @param Node $type
      */
     private function encode(array $type, string $value, bool $nullable = false): string
     {
-        $arrow = $nullable ? '?->' : '->';
         return match ($this->kind($type)) {
-            'record', 'union' => "{$value}{$arrow}toArray()",
-            'enum' => "{$value}{$arrow}value",
+            'enum' => $nullable ? "{$value}?->value" : "{$value}->value",
             'primitive' => $value,
+            'map' => ($nullable ? "{$value} === null ? null : " : '') . self::WIRE . "::encodeMap({$value})",
             default => self::WIRE . "::encode({$value})",
         };
     }

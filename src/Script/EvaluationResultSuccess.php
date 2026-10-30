@@ -36,7 +36,7 @@ final readonly class EvaluationResultSuccess implements EvaluationResult
     {
         return [
             'type' => 'success',
-            'result' => $this->result->toArray(),
+            'result' => Wire::encode($this->result),
             'realm' => $this->realm,
         ];
     }

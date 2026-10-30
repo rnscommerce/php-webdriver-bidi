@@ -53,7 +53,7 @@ final readonly class ConsoleLogEntry implements Entry
     {
         $data = [
             'level' => $this->level->value,
-            'source' => $this->source->toArray(),
+            'source' => Wire::encode($this->source),
             'text' => $this->text,
             'timestamp' => $this->timestamp,
             'type' => 'console',
@@ -61,7 +61,7 @@ final readonly class ConsoleLogEntry implements Entry
             'args' => Wire::encode($this->args),
         ];
         if ($this->stackTrace !== null) {
-            $data['stackTrace'] = $this->stackTrace->toArray();
+            $data['stackTrace'] = Wire::encode($this->stackTrace);
         }
         return $data;
     }

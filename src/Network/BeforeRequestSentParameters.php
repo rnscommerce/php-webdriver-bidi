@@ -56,7 +56,7 @@ final readonly class BeforeRequestSentParameters
             'isBlocked' => $this->isBlocked,
             'navigation' => $this->navigation,
             'redirectCount' => $this->redirectCount,
-            'request' => $this->request->toArray(),
+            'request' => Wire::encode($this->request),
             'timestamp' => $this->timestamp,
         ];
         if ($this->userContext !== null) {
@@ -66,7 +66,7 @@ final readonly class BeforeRequestSentParameters
             $data['intercepts'] = Wire::encode($this->intercepts);
         }
         if ($this->initiator !== null) {
-            $data['initiator'] = $this->initiator->toArray();
+            $data['initiator'] = Wire::encode($this->initiator);
         }
         return $data;
     }

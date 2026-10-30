@@ -51,7 +51,7 @@ final readonly class NodeRemoteValue implements RemoteValue
             $data['internalId'] = $this->internalId;
         }
         if ($this->value !== null) {
-            $data['value'] = $this->value->toArray();
+            $data['value'] = Wire::encode($this->value);
         }
         return $data;
     }

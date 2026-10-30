@@ -56,9 +56,9 @@ final readonly class ResponseCompletedParameters
             'isBlocked' => $this->isBlocked,
             'navigation' => $this->navigation,
             'redirectCount' => $this->redirectCount,
-            'request' => $this->request->toArray(),
+            'request' => Wire::encode($this->request),
             'timestamp' => $this->timestamp,
-            'response' => $this->response->toArray(),
+            'response' => Wire::encode($this->response),
         ];
         if ($this->userContext !== null) {
             $data['userContext'] = $this->userContext;

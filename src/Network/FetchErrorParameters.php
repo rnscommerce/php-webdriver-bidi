@@ -56,7 +56,7 @@ final readonly class FetchErrorParameters
             'isBlocked' => $this->isBlocked,
             'navigation' => $this->navigation,
             'redirectCount' => $this->redirectCount,
-            'request' => $this->request->toArray(),
+            'request' => Wire::encode($this->request),
             'timestamp' => $this->timestamp,
             'errorText' => $this->errorText,
         ];

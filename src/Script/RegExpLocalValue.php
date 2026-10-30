@@ -34,7 +34,7 @@ final readonly class RegExpLocalValue implements LocalValue
     {
         return [
             'type' => 'regexp',
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
         ];
     }
 }

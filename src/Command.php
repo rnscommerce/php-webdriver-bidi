@@ -7,7 +7,7 @@ namespace Rnscommerce\WebDriver\BiDi;
 /**
  * A WebDriver BiDi command: the method and parameters sent, and how its result is read.
  *
- * @template T
+ * @template-covariant T
  */
 final class Command
 {

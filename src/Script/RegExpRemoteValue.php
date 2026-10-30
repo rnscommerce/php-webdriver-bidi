@@ -38,7 +38,7 @@ final readonly class RegExpRemoteValue implements RemoteValue
     {
         $data = [
             'type' => 'regexp',
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
         ];
         if ($this->handle !== null) {
             $data['handle'] = $this->handle;

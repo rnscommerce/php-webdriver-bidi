@@ -38,7 +38,7 @@ final readonly class WindowProxyRemoteValue implements RemoteValue
     {
         $data = [
             'type' => 'window',
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
         ];
         if ($this->handle !== null) {
             $data['handle'] = $this->handle;

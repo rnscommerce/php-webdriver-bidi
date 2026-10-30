@@ -64,7 +64,7 @@ final readonly class RequestData
             'bodySize' => $this->bodySize,
             'destination' => $this->destination,
             'initiatorType' => $this->initiatorType,
-            'timings' => $this->timings->toArray(),
+            'timings' => Wire::encode($this->timings),
         ];
     }
 }

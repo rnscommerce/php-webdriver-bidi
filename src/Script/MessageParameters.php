@@ -38,8 +38,8 @@ final readonly class MessageParameters
     {
         return [
             'channel' => $this->channel,
-            'data' => $this->data->toArray(),
-            'source' => $this->source->toArray(),
+            'data' => Wire::encode($this->data),
+            'source' => Wire::encode($this->source),
         ];
     }
 }

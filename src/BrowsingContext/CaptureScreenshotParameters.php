@@ -49,13 +49,13 @@ final readonly class CaptureScreenshotParameters
             $data['origin'] = $this->origin->value;
         }
         if ($this->format !== null) {
-            $data['format'] = $this->format->toArray();
+            $data['format'] = Wire::encode($this->format);
         }
         if ($this->clip !== null) {
-            $data['clip'] = $this->clip->toArray();
+            $data['clip'] = Wire::encode($this->clip);
         }
         if ($this->imageSize !== null) {
-            $data['imageSize'] = $this->imageSize->toArray();
+            $data['imageSize'] = Wire::encode($this->imageSize);
         }
         return $data;
     }

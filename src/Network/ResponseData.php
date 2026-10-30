@@ -71,7 +71,7 @@ final readonly class ResponseData
             'bytesReceived' => $this->bytesReceived,
             'headersSize' => $this->headersSize,
             'bodySize' => $this->bodySize,
-            'content' => $this->content->toArray(),
+            'content' => Wire::encode($this->content),
         ];
         if ($this->authChallenges !== null) {
             $data['authChallenges'] = Wire::encode($this->authChallenges);

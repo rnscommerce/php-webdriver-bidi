@@ -50,7 +50,7 @@ final readonly class Cookie
     {
         $data = [
             'name' => $this->name,
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
             'domain' => $this->domain,
             'path' => $this->path,
             'size' => $this->size,

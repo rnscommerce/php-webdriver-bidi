@@ -33,7 +33,7 @@ final readonly class GetDataResult
     public function toArray(): array
     {
         return [
-            'bytes' => $this->bytes->toArray(),
+            'bytes' => Wire::encode($this->bytes),
         ];
     }
 }

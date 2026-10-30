@@ -50,7 +50,7 @@ final readonly class StartScreencastParameters
             $data['mimeType'] = $this->mimeType;
         }
         if ($this->video !== null) {
-            $data['video'] = $this->video->toArray();
+            $data['video'] = Wire::encode($this->video);
         }
         if ($this->audio !== null) {
             $data['audio'] = $this->audio;

@@ -45,6 +45,7 @@ use Rnscommerce\WebDriver\BiDi\Script\ChannelProperties;
 use Rnscommerce\WebDriver\BiDi\Script\ChannelValue;
 use Rnscommerce\WebDriver\BiDi\Script\ContextTarget;
 use Rnscommerce\WebDriver\BiDi\Script\EvaluationResultSuccess;
+use Rnscommerce\WebDriver\BiDi\Script\NodeProperties;
 use Rnscommerce\WebDriver\BiDi\Script\RemovePreloadScriptParameters;
 use Rnscommerce\WebDriver\BiDi\Script\ResultOwnership;
 use Rnscommerce\WebDriver\BiDi\Script\SerializationOptions;
@@ -64,7 +65,7 @@ final class CommandsTest extends TestCase
     private const CONTEXT = 'B5F38C3A1D0E4A0C9A6E2F9C7D3B1A40';
 
     /**
-     * @param Command<covariant mixed> $command
+     * @param Command<mixed> $command
      * @param class-string|null $resultClass
      */
     #[DataProvider('commands')]
@@ -88,7 +89,7 @@ final class CommandsTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{Command<covariant mixed>, string, string, string, class-string|null}>
+     * @return iterable<string, array{Command<mixed>, string, string, string, class-string|null}>
      */
     public static function commands(): iterable
     {
@@ -322,5 +323,25 @@ final class CommandsTest extends TestCase
         self::assertInstanceOf(EvaluationResultSuccess::class, $result);
         self::assertInstanceOf(StringValue::class, $result->result);
         self::assertSame('complete', $result->result->value);
+    }
+
+    public function testRecordsAndMapsWithNothingSetReachTheWireAsObjects(): void
+    {
+        $command = Script::callFunction(new CallFunctionParameters(
+            '() => 1',
+            false,
+            new ContextTarget(self::CONTEXT),
+            serializationOptions: new SerializationOptions(),
+        ));
+
+        self::assertSame(
+            '{"functionDeclaration":"() => 1","awaitPromise":false,"target":{"context":"' . self::CONTEXT . '"},'
+                . '"serializationOptions":{}}',
+            \json_encode($command->getParams(), \JSON_THROW_ON_ERROR),
+        );
+        self::assertSame(
+            '{"nodeType":1,"childNodeCount":0,"attributes":{}}',
+            \json_encode((new NodeProperties(1, 0, attributes: []))->toArray(), \JSON_THROW_ON_ERROR),
+        );
     }
 }

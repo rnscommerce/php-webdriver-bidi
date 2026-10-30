@@ -26,7 +26,8 @@ trait WireAssertions
      */
     private static function assertEncodesTo(array $expected, mixed $actual): void
     {
-        self::assertSame(self::sorted($expected), self::sorted(Wire::encode($actual)));
+        $encoded = \json_decode(\json_encode(Wire::encode($actual), \JSON_THROW_ON_ERROR), true);
+        self::assertSame(self::sorted($expected), self::sorted($encoded));
     }
 
     private static function sorted(mixed $value): mixed

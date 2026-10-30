@@ -42,7 +42,7 @@ final readonly class ChannelProperties
             'channel' => $this->channel,
         ];
         if ($this->serializationOptions !== null) {
-            $data['serializationOptions'] = $this->serializationOptions->toArray();
+            $data['serializationOptions'] = Wire::encode($this->serializationOptions);
         }
         if ($this->ownership !== null) {
             $data['ownership'] = $this->ownership->value;

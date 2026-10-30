@@ -7,7 +7,7 @@ namespace Rnscommerce\WebDriver\BiDi;
 /**
  * A WebDriver BiDi event: its method, and how its parameters are read.
  *
- * @template T
+ * @template-covariant T
  */
 final class Event
 {

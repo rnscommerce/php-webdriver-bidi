@@ -52,7 +52,7 @@ final readonly class Initiator
             $data['request'] = $this->request;
         }
         if ($this->stackTrace !== null) {
-            $data['stackTrace'] = $this->stackTrace->toArray();
+            $data['stackTrace'] = Wire::encode($this->stackTrace);
         }
         if ($this->type !== null) {
             $data['type'] = $this->type->value;

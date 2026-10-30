@@ -88,7 +88,7 @@ final class EventsTest extends TestCase
         JSON;
 
     /**
-     * @param Event<covariant mixed> $event
+     * @param Event<mixed> $event
      * @param class-string $paramsClass
      */
     #[DataProvider('events')]
@@ -103,7 +103,7 @@ final class EventsTest extends TestCase
     }
 
     /**
-     * @return iterable<string, array{Event<covariant mixed>, string, string, class-string}>
+     * @return iterable<string, array{Event<mixed>, string, string, class-string}>
      */
     public static function events(): iterable
     {

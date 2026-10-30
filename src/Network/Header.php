@@ -36,7 +36,7 @@ final readonly class Header
     {
         return [
             'name' => $this->name,
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
         ];
     }
 }

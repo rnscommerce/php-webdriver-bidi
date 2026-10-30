@@ -42,9 +42,9 @@ final readonly class ExceptionDetails
     {
         return [
             'columnNumber' => $this->columnNumber,
-            'exception' => $this->exception->toArray(),
+            'exception' => Wire::encode($this->exception),
             'lineNumber' => $this->lineNumber,
-            'stackTrace' => $this->stackTrace->toArray(),
+            'stackTrace' => Wire::encode($this->stackTrace),
             'text' => $this->text,
         ];
     }

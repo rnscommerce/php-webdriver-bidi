@@ -79,16 +79,24 @@ final class Wire
     }
 
     /**
-     * Encodes a list, a map or a choice of what the generated types hold.
+     * Encodes what the generated types hold, a record as an object even when none of its fields is set.
      */
     public static function encode(mixed $value): mixed
     {
         return match (true) {
             $value instanceof \BackedEnum => $value->value,
-            \is_object($value) && \method_exists($value, 'toArray') => $value->toArray(),
+            \is_object($value) && \method_exists($value, 'toArray') => (object) $value->toArray(),
             \is_array($value) => \array_map(self::encode(...), $value),
             default => $value,
         };
+    }
+
+    /**
+     * @param array<string, mixed> $map
+     */
+    public static function encodeMap(array $map): \stdClass
+    {
+        return (object) \array_map(self::encode(...), $map);
     }
 
     /**

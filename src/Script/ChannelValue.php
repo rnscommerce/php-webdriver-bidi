@@ -34,7 +34,7 @@ final readonly class ChannelValue implements LocalValue
     {
         return [
             'type' => 'channel',
-            'value' => $this->value->toArray(),
+            'value' => Wire::encode($this->value),
         ];
     }
 }
