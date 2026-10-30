@@ -14,6 +14,7 @@ use Rnscommerce\WebDriver\BiDi\ErrorResponseException;
 use Rnscommerce\WebDriver\BiDi\Event;
 use Rnscommerce\WebDriver\BiDi\Tests\FakeWebSocket;
 use Rnscommerce\WebDriver\BiDi\TimeoutException;
+use Rnscommerce\WebDriver\BiDi\Wire;
 
 use function Amp\async;
 use function Amp\Future\await;
@@ -204,32 +205,82 @@ final class BiDiTest extends TestCase
         self::assertSame(['test.react'], $answers);
     }
 
-    public function testAFailingListenerThrowsFromTheNextDrainAndTheConnectionCarriesOn(): void
+    public function testEveryListenerFailureReachesTheErrorHandlerAndTheCommandKeepsItsResult(): void
     {
-        $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
-            $socket->push(self::success($message['id'], ['value' => 'still here']));
-        });
+        $errors = [];
+        $bidi = $this->connect(
+            static function (array $message, FakeWebSocket $socket): void {
+                $socket->push(self::event('test.happened', ['n' => 1]));
+                $socket->push(self::event('test.happened', ['n' => 'not a number']));
+                $socket->push(self::success($message['id'], ['value' => 'created']));
+            },
+            static function (\Throwable $e) use (&$errors): void {
+                $errors[] = $e->getMessage();
+            },
+        );
         $this->connection->addListener(self::happened(), static function (): void {
             throw new \LogicException('Listener failed');
         });
-        $this->socket->push(self::event('test.happened', ['n' => 1]));
 
+        self::assertSame('created', $bidi->send(self::command('test.create')));
+        self::assertCount(2, $errors);
+        self::assertSame('Listener failed', $errors[0]);
+        self::assertStringContainsString('an integer', $errors[1]);
+    }
+
+    public function testAddingAListenerReturnsItsSubscriptionWhileAnotherListenerFails(): void
+    {
+        $errors = 0;
+        $bidi = $this->connect(
+            static function (array $message, FakeWebSocket $socket): void {
+                $socket->push(self::event('test.happened', ['n' => 1]));
+                $socket->push(self::success($message['id'], ['subscription' => 'subscription-1']));
+            },
+            static function () use (&$errors): void {
+                $errors++;
+            },
+        );
+        $this->connection->addListener(self::happened(), static function (): void {
+            throw new \LogicException('Listener failed');
+        });
+
+        $id = $bidi->addListener(new Event('test.other', static fn (): null => null), static function (): void {
+        });
+
+        self::assertSame('subscription-1', $id);
+        self::assertSame(1, $errors);
+        self::assertSame(['session.subscribe'], array_column($this->socket->sent, 'method'));
+    }
+
+    public function testAListenerFailureGoesToTheErrorLogWhenNoHandlerIsGiven(): void
+    {
+        $log = (string) tempnam(sys_get_temp_dir(), 'bidi');
+        $previous = ini_set('error_log', $log);
         try {
-            $bidi->drain();
-            self::fail('The listener failure was not thrown');
-        } catch (\LogicException $e) {
-            self::assertSame('Listener failed', $e->getMessage());
+            $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
+                $socket->push(self::event('test.happened', ['n' => 1]));
+                $socket->push(self::success($message['id'], ['value' => 'done']));
+            });
+            $this->connection->addListener(self::happened(), static function (): void {
+                throw new \LogicException('Listener failed');
+            });
+
+            self::assertSame('done', $bidi->send(self::command('test.act')));
+            self::assertStringContainsString('LogicException: Listener failed', (string) file_get_contents($log));
+        } finally {
+            ini_set('error_log', (string) $previous);
+            unlink($log);
         }
-        self::assertSame('still here', $bidi->send(self::command('test.act')));
     }
 
     /**
      * @param \Closure(array<string, mixed>, FakeWebSocket): void $remote
+     * @param (callable(\Throwable): void)|null $onListenerError
      */
-    private function connect(\Closure $remote): BiDi
+    private function connect(\Closure $remote, ?callable $onListenerError = null): BiDi
     {
         $this->socket = new FakeWebSocket($remote);
-        $this->connection = new Connection($this->socket);
+        $this->connection = new Connection($this->socket, $onListenerError);
         return new BiDi($this->connection, 1.0);
     }
 
@@ -247,11 +298,7 @@ final class BiDiTest extends TestCase
      */
     private static function happened(): Event
     {
-        return new Event('test.happened', static function (array $params): int {
-            $n = $params['n'];
-            self::assertIsInt($n);
-            return $n;
-        });
+        return new Event('test.happened', static fn (array $params): int => Wire::int($params['n'] ?? null));
     }
 
     /**

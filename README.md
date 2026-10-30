@@ -42,6 +42,14 @@ $bidi->removeListener($id);
 
 Events wait on the socket while nothing reads it. They reach their handlers during any command, or when `drain()` is called.
 
+What a handler throws, or what an event that cannot be read throws, goes to PHP's error log, and every other handler and command carries on. To send it elsewhere, pass a handler:
+
+```php
+$bidi = BiDi::connect($webSocketUrl, onListenerError: function (\Throwable $e): void {
+    // ...
+});
+```
+
 ### Run a preload script that reports through a channel
 
 ```php

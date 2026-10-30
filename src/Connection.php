@@ -27,7 +27,8 @@ final class Connection
 
     private bool $closed = false;
 
-    private ?\Throwable $listenerFailure = null;
+    /** @var \Closure(\Throwable): void */
+    private readonly \Closure $onListenerError;
 
     /** @var array<int, DeferredFuture<array<string, mixed>>> */
     private array $pending = [];
@@ -35,8 +36,17 @@ final class Connection
     /** @var array<int, array{string, \Closure(array<string, mixed>): void}> */
     private array $listeners = [];
 
-    public function __construct(private readonly WebSocket $socket)
+    /**
+     * @param (callable(\Throwable): void)|null $onListenerError called with whatever a listener throws, which
+     *     otherwise goes to PHP's error log
+     */
+    public function __construct(private readonly WebSocket $socket, ?callable $onListenerError = null)
     {
+        $this->onListenerError = $onListenerError === null
+            ? static function (\Throwable $e): void {
+                error_log('A WebDriver BiDi listener failed: ' . $e);
+            }
+            : $onListenerError(...);
         EventLoop::queue($this->read(...));
     }
 
@@ -70,7 +80,6 @@ final class Connection
             EventLoop::cancel($timer);
             unset($this->pending[$id]);
         }
-        $this->throwListenerFailure();
         return $command->mapResult($result);
     }
 
@@ -104,7 +113,6 @@ final class Connection
             $received = $this->received;
             delay(0);
         } while ($this->received !== $received);
-        $this->throwListenerFailure();
     }
 
     public function close(): void
@@ -187,18 +195,9 @@ final class Connection
                 try {
                     $deliver($params);
                 } catch (\Throwable $e) {
-                    $this->listenerFailure ??= $e;
+                    ($this->onListenerError)($e);
                 }
             });
-        }
-    }
-
-    private function throwListenerFailure(): void
-    {
-        $failure = $this->listenerFailure;
-        $this->listenerFailure = null;
-        if ($failure !== null) {
-            throw $failure;
         }
     }
 

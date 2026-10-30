@@ -25,10 +25,15 @@ final class BiDi
      * Connects to the webSocketUrl capability of a WebDriver session started with webSocketUrl: true.
      *
      * @param float $timeout Seconds a command waits for its answer.
+     * @param (callable(\Throwable): void)|null $onListenerError called with whatever a listener throws, which
+     *     otherwise goes to PHP's error log
      */
-    public static function connect(string $webSocketUrl, float $timeout = 30.0): self
-    {
-        return new self(new Connection(AmpWebSocket::connect($webSocketUrl)), $timeout);
+    public static function connect(
+        string $webSocketUrl,
+        float $timeout = 30.0,
+        ?callable $onListenerError = null,
+    ): self {
+        return new self(new Connection(AmpWebSocket::connect($webSocketUrl), $onListenerError), $timeout);
     }
 
     /**
