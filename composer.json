@@ -27,6 +27,7 @@
     "scripts": {
         "generate": "php tools/generate.php",
         "test": "phpunit",
+        "test:integration": "phpunit --testsuite integration",
         "stan": "phpstan analyse",
         "cs": "phpcs",
         "cs-fix": "phpcbf",

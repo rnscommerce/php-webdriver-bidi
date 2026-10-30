@@ -1,0 +1,8 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>transition</title>
+<body>
+<style>#box { width: 50px; height: 50px; background: teal; transition: width 2s; } #box.wide { width: 300px; }</style>
+<div id="box"></div>
+<script>setTimeout(() => document.getElementById("box").classList.add("wide"), 100);</script>
+</body>
