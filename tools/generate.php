@@ -16,7 +16,7 @@ if (!\is_array($schema)) {
 /** @var array<string, mixed> $schema */
 $files = (new Generator($schema, $allowlist))->generate();
 
-foreach (\glob("{$root}/src/*/*.php") ?: [] as $path) {
+foreach ([...\glob("{$root}/src/*/*.php") ?: [], ...\glob("{$root}/src/*/*/*.php") ?: []] as $path) {
     if (\str_contains((string) \file_get_contents($path), Generator::HEADER)) {
         \unlink($path);
     }

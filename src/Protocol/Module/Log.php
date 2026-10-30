@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace Rnscommerce\WebDriver\BiDi\Module;
+namespace Rnscommerce\WebDriver\BiDi\Protocol\Module;
 
 use Rnscommerce\WebDriver\BiDi\Event;
 use Rnscommerce\WebDriver\BiDi\Log\Entry;

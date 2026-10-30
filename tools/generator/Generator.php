@@ -162,7 +162,7 @@ final class Generator
                     }
                 PHP;
         }
-        return $this->file(self::ROOT . '\\Module\\' . \ucfirst($domain), 'final class', $methods);
+        return $this->file(self::ROOT . '\\Protocol\\Module\\' . \ucfirst($domain), 'final class', $methods);
     }
 
     /**

@@ -1,41 +1,30 @@
 <?php
 
-/**
- * Generated from schema/schema.json — do not edit, run composer generate.
- */
-
 declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi\Module;
 
+use Rnscommerce\WebDriver\BiDi\BiDi;
 use Rnscommerce\WebDriver\BiDi\Browser\CreateUserContextParameters;
 use Rnscommerce\WebDriver\BiDi\Browser\RemoveUserContextParameters;
-use Rnscommerce\WebDriver\BiDi\Browser\UserContextInfo;
-use Rnscommerce\WebDriver\BiDi\Command;
+use Rnscommerce\WebDriver\BiDi\Protocol\Module\Browser as Protocol;
 
 final class Browser
 {
-    /**
-     * @return Command<UserContextInfo>
-     */
-    public static function createUserContext(CreateUserContextParameters $params): Command
+    public function __construct(private readonly BiDi $bidi)
     {
-        return new Command(
-            'browser.createUserContext',
-            $params->toArray(),
-            UserContextInfo::fromArray(...),
-        );
     }
 
     /**
-     * @return Command<null>
+     * @return string the user context id
      */
-    public static function removeUserContext(RemoveUserContextParameters $params): Command
+    public function createUserContext(): string
     {
-        return new Command(
-            'browser.removeUserContext',
-            $params->toArray(),
-            static fn (array $result): null => null,
-        );
+        return $this->bidi->send(Protocol::createUserContext(new CreateUserContextParameters()))->userContext;
+    }
+
+    public function removeUserContext(string $userContext): void
+    {
+        $this->bidi->send(Protocol::removeUserContext(new RemoveUserContextParameters($userContext)));
     }
 }

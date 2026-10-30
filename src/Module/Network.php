@@ -1,92 +1,79 @@
 <?php
 
-/**
- * Generated from schema/schema.json — do not edit, run composer generate.
- */
-
 declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi\Module;
 
-use Rnscommerce\WebDriver\BiDi\Command;
-use Rnscommerce\WebDriver\BiDi\Event;
+use Rnscommerce\WebDriver\BiDi\BiDi;
 use Rnscommerce\WebDriver\BiDi\Network\AddDataCollectorParameters;
-use Rnscommerce\WebDriver\BiDi\Network\AddDataCollectorResult;
 use Rnscommerce\WebDriver\BiDi\Network\BeforeRequestSentParameters;
+use Rnscommerce\WebDriver\BiDi\Network\BytesValue;
 use Rnscommerce\WebDriver\BiDi\Network\FetchErrorParameters;
 use Rnscommerce\WebDriver\BiDi\Network\GetDataParameters;
-use Rnscommerce\WebDriver\BiDi\Network\GetDataResult;
 use Rnscommerce\WebDriver\BiDi\Network\RemoveDataCollectorParameters;
 use Rnscommerce\WebDriver\BiDi\Network\ResponseCompletedParameters;
 use Rnscommerce\WebDriver\BiDi\Network\ResponseStartedParameters;
+use Rnscommerce\WebDriver\BiDi\Protocol\Module\Network as Protocol;
 
+/**
+ * Each on method subscribes to its event and returns the id that BiDi::removeListener takes.
+ */
 final class Network
 {
     /**
-     * @return Event<BeforeRequestSentParameters>
+     * @param list<string> $browsingContextIds where to listen, or everywhere when empty
      */
-    public static function beforeRequestSent(): Event
+    public function __construct(private readonly BiDi $bidi, private readonly array $browsingContextIds = [])
     {
-        return new Event('network.beforeRequestSent', BeforeRequestSentParameters::fromArray(...));
     }
 
     /**
-     * @return Event<FetchErrorParameters>
+     * @return string the collector id
      */
-    public static function fetchError(): Event
+    public function addDataCollector(AddDataCollectorParameters $parameters): string
     {
-        return new Event('network.fetchError', FetchErrorParameters::fromArray(...));
+        return $this->bidi->send(Protocol::addDataCollector($parameters))->collector;
+    }
+
+    public function getData(GetDataParameters $parameters): BytesValue
+    {
+        return $this->bidi->send(Protocol::getData($parameters))->bytes;
+    }
+
+    public function removeDataCollector(string $collector): void
+    {
+        $this->bidi->send(Protocol::removeDataCollector(new RemoveDataCollectorParameters($collector)));
     }
 
     /**
-     * @return Event<ResponseCompletedParameters>
+     * @param callable(BeforeRequestSentParameters): void $handler
      */
-    public static function responseCompleted(): Event
+    public function onBeforeRequestSent(callable $handler): string
     {
-        return new Event('network.responseCompleted', ResponseCompletedParameters::fromArray(...));
+        return $this->bidi->addListener(Protocol::beforeRequestSent(), $handler, $this->browsingContextIds);
     }
 
     /**
-     * @return Event<ResponseStartedParameters>
+     * @param callable(ResponseStartedParameters): void $handler
      */
-    public static function responseStarted(): Event
+    public function onResponseStarted(callable $handler): string
     {
-        return new Event('network.responseStarted', ResponseStartedParameters::fromArray(...));
+        return $this->bidi->addListener(Protocol::responseStarted(), $handler, $this->browsingContextIds);
     }
 
     /**
-     * @return Command<AddDataCollectorResult>
+     * @param callable(ResponseCompletedParameters): void $handler
      */
-    public static function addDataCollector(AddDataCollectorParameters $params): Command
+    public function onResponseCompleted(callable $handler): string
     {
-        return new Command(
-            'network.addDataCollector',
-            $params->toArray(),
-            AddDataCollectorResult::fromArray(...),
-        );
+        return $this->bidi->addListener(Protocol::responseCompleted(), $handler, $this->browsingContextIds);
     }
 
     /**
-     * @return Command<GetDataResult>
+     * @param callable(FetchErrorParameters): void $handler
      */
-    public static function getData(GetDataParameters $params): Command
+    public function onFetchError(callable $handler): string
     {
-        return new Command(
-            'network.getData',
-            $params->toArray(),
-            GetDataResult::fromArray(...),
-        );
-    }
-
-    /**
-     * @return Command<null>
-     */
-    public static function removeDataCollector(RemoveDataCollectorParameters $params): Command
-    {
-        return new Command(
-            'network.removeDataCollector',
-            $params->toArray(),
-            static fn (array $result): null => null,
-        );
+        return $this->bidi->addListener(Protocol::fetchError(), $handler, $this->browsingContextIds);
     }
 }

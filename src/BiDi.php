@@ -4,13 +4,31 @@ declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi;
 
+use Rnscommerce\WebDriver\BiDi\Protocol\Module\Session;
+use Rnscommerce\WebDriver\BiDi\Session\SubscribeParameters;
+use Rnscommerce\WebDriver\BiDi\Session\UnsubscribeByIDRequest;
+use Rnscommerce\WebDriver\BiDi\Transport\AmpWebSocket;
+
 final class BiDi
 {
+    /** @var array<string, int> each subscription's listener on the connection */
+    private array $listeners = [];
+
     /**
      * @param float $timeout Seconds a command waits for its answer.
      */
     public function __construct(private readonly Connection $connection, private readonly float $timeout)
     {
+    }
+
+    /**
+     * Connects to the webSocketUrl capability of a WebDriver session started with webSocketUrl: true.
+     *
+     * @param float $timeout Seconds a command waits for its answer.
+     */
+    public static function connect(string $webSocketUrl, float $timeout = 30.0): self
+    {
+        return new self(new Connection(AmpWebSocket::connect($webSocketUrl)), $timeout);
     }
 
     /**
@@ -24,20 +42,41 @@ final class BiDi
     }
 
     /**
-     * Calls the handler with each of these events that arrives. Subscribing to them is the session.subscribe command.
+     * Subscribes to the event, in these browsing contexts or else in all of them, and calls the handler with each
+     * one that arrives. Returns the subscription id that removeListener takes.
      *
      * @template X
      * @param Event<X> $event
      * @param callable(X): void $handler
+     * @param list<string> $browsingContextIds
      */
-    public function addListener(Event $event, callable $handler): int
+    public function addListener(Event $event, callable $handler, array $browsingContextIds = []): string
     {
-        return $this->connection->addListener($event, $handler);
+        $listener = $this->connection->addListener($event, $handler);
+        try {
+            $subscription = $this->send(Session::subscribe(new SubscribeParameters(
+                [$event->getMethod()],
+                $browsingContextIds === [] ? null : $browsingContextIds,
+            )))->subscription;
+        } catch (\Throwable $e) {
+            $this->connection->removeListener($listener);
+            throw $e;
+        }
+        $this->listeners[$subscription] = $listener;
+        return $subscription;
     }
 
-    public function removeListener(int $id): void
+    /**
+     * Stops calling the listener's handler, and unsubscribes from its event.
+     */
+    public function removeListener(string $id): void
     {
-        $this->connection->removeListener($id);
+        if (!isset($this->listeners[$id])) {
+            return;
+        }
+        $this->connection->removeListener($this->listeners[$id]);
+        unset($this->listeners[$id]);
+        $this->send(Session::unsubscribe(new UnsubscribeByIDRequest([$id])));
     }
 
     public function drain(): void

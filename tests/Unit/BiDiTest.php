@@ -22,6 +22,8 @@ final class BiDiTest extends TestCase
 {
     private FakeWebSocket $socket;
 
+    private Connection $connection;
+
     public function testIdsIncreaseAndEachAnswerResolvesItsCommand(): void
     {
         $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
@@ -61,7 +63,7 @@ final class BiDiTest extends TestCase
             $socket->push(self::success($message['id'], ['value' => 'done']));
         });
         $seen = [];
-        $bidi->addListener(self::happened(), static function (int $n) use (&$seen): void {
+        $this->connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
             $seen[] = $n;
         });
 
@@ -141,13 +143,13 @@ final class BiDiTest extends TestCase
         $bidi = $this->connect(static function (): void {
         });
         $seen = [];
-        $id = $bidi->addListener(self::happened(), static function (int $n) use (&$seen): void {
+        $id = $this->connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
             $seen[] = $n;
         });
 
         $this->socket->push(self::event('test.happened', ['n' => 1]));
         $bidi->drain();
-        $bidi->removeListener($id);
+        $this->connection->removeListener($id);
         $this->socket->push(self::event('test.happened', ['n' => 2]));
         $bidi->drain();
 
@@ -159,7 +161,7 @@ final class BiDiTest extends TestCase
         $bidi = $this->connect(static function (): void {
         });
         $seen = [];
-        $bidi->addListener(self::happened(), static function (int $n) use (&$seen): void {
+        $this->connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
             $seen[] = $n;
         });
         $this->socket->push(self::event('test.happened', ['n' => 1]));
@@ -192,7 +194,7 @@ final class BiDiTest extends TestCase
             $socket->push(self::success($message['id'], ['value' => $message['method']]));
         });
         $answers = [];
-        $bidi->addListener(self::happened(), static function () use ($bidi, &$answers): void {
+        $this->connection->addListener(self::happened(), static function () use ($bidi, &$answers): void {
             $answers[] = $bidi->send(self::command('test.react'));
         });
 
@@ -207,7 +209,7 @@ final class BiDiTest extends TestCase
         $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
             $socket->push(self::success($message['id'], ['value' => 'still here']));
         });
-        $bidi->addListener(self::happened(), static function (): void {
+        $this->connection->addListener(self::happened(), static function (): void {
             throw new \LogicException('Listener failed');
         });
         $this->socket->push(self::event('test.happened', ['n' => 1]));
@@ -227,7 +229,8 @@ final class BiDiTest extends TestCase
     private function connect(\Closure $remote): BiDi
     {
         $this->socket = new FakeWebSocket($remote);
-        return new BiDi(new Connection($this->socket), 1.0);
+        $this->connection = new Connection($this->socket);
+        return new BiDi($this->connection, 1.0);
     }
 
     /**
