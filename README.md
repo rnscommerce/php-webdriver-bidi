@@ -44,6 +44,42 @@ $bidi->removeListener($id);
 
 Events wait on the socket while nothing reads it. They reach their handlers during any command, or when `drain()` is called.
 
+### Wait for events
+
+`waitFor` delivers events until a condition holds, checking it after `drain()` and again each time a listener is called. It returns false if the condition still does not hold after the timeout, in seconds:
+
+```php
+$inFlight = 0;
+$network->onBeforeRequestSent(function () use (&$inFlight): void {
+    $inFlight++;
+});
+$network->onResponseCompleted(function () use (&$inFlight): void {
+    $inFlight--;
+});
+$network->onFetchError(function () use (&$inFlight): void {
+    $inFlight--;
+});
+
+$idle = $bidi->waitFor(function () use (&$inFlight): bool {
+    return $inFlight === 0;
+}, 10.0);
+```
+
+A wait that times out is how to wait for a quiet period, here half a second without a message from the preload script below:
+
+```php
+$changed = false;
+$script->onMessage(function () use (&$changed): void {
+    $changed = true;
+});
+
+do {
+    $changed = false;
+} while ($bidi->waitFor(function () use (&$changed): bool {
+    return $changed;
+}, 0.5));
+```
+
 What a handler throws, or what an event that cannot be read throws, goes to PHP's error log, and every other handler and command carries on. To send it elsewhere, pass a handler:
 
 ```php

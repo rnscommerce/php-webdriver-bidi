@@ -7,8 +7,6 @@ namespace Rnscommerce\WebDriver\BiDi\Tests\Integration;
 use PHPUnit\Framework\TestCase;
 use Rnscommerce\WebDriver\BiDi\BiDi;
 
-use function Amp\delay;
-
 /**
  * Starts a driver and a fixture server per test class, and a headless session with a BiDi connection per test.
  */
@@ -91,33 +89,18 @@ abstract class BrowserTestCase extends TestCase
     }
 
     /**
-     * Drains events until the condition holds, or fails after $seconds.
-     *
      * @param callable(): bool $condition
      */
     protected function waitFor(callable $condition, string $what, float $seconds = 10.0, ?BiDi $bidi = null): void
     {
-        $bidi ??= $this->bidi;
-        $deadline = microtime(true) + $seconds;
-        while (true) {
-            $bidi->drain();
-            if ($condition()) {
-                return;
-            }
-            if (microtime(true) > $deadline) {
-                self::fail("Gave up waiting for $what");
-            }
-            delay(0.05);
+        if (!($bidi ?? $this->bidi)->waitFor($condition, $seconds)) {
+            self::fail("Gave up waiting for $what");
         }
     }
 
     protected function settle(float $seconds): void
     {
-        $deadline = microtime(true) + $seconds;
-        while (microtime(true) < $deadline) {
-            $this->bidi->drain();
-            delay(0.05);
-        }
+        $this->bidi->waitFor(static fn (): bool => false, $seconds);
     }
 
     protected static function freePort(): int

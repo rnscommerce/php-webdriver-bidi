@@ -36,6 +36,9 @@ final class Connection
     /** @var array<int, array{string, \Closure(array<string, mixed>): void}> */
     private array $listeners = [];
 
+    /** @var array<int, DeferredFuture<null>> */
+    private array $awaitingDelivery = [];
+
     /**
      * @param (callable(\Throwable): void)|null $onListenerError called with whatever a listener throws, which
      *     otherwise goes to PHP's error log
@@ -117,6 +120,31 @@ final class Connection
             delay(0);
         } while ($this->received !== $received);
         $this->throwIfClosed();
+    }
+
+    /**
+     * Runs the event loop until a listener has been called, or $timeout seconds pass.
+     *
+     * @throws ConnectionClosedException
+     */
+    public function awaitDelivery(float $timeout): void
+    {
+        $this->throwIfClosed();
+        /** @var DeferredFuture<null> $delivered */
+        $delivered = new DeferredFuture();
+        $key = spl_object_id($delivered);
+        $this->awaitingDelivery[$key] = $delivered;
+        $timer = EventLoop::delay($timeout, static function () use ($delivered): void {
+            if (!$delivered->isComplete()) {
+                $delivered->complete();
+            }
+        });
+        try {
+            $delivered->getFuture()->await();
+        } finally {
+            EventLoop::cancel($timer);
+            unset($this->awaitingDelivery[$key]);
+        }
     }
 
     public function isClosed(): bool
@@ -222,6 +250,11 @@ final class Connection
         } catch (\Throwable $e) {
             ($this->onListenerError)($e);
         }
+        $awaiting = $this->awaitingDelivery;
+        $this->awaitingDelivery = [];
+        foreach ($awaiting as $delivered) {
+            $delivered->complete();
+        }
     }
 
     /**
@@ -240,10 +273,10 @@ final class Connection
             return;
         }
         $this->closedBy = $reason;
-        $pending = $this->pending;
-        $this->pending = [];
-        foreach ($pending as $answer) {
-            $answer->error($reason);
+        $waiting = [...$this->pending, ...$this->awaitingDelivery];
+        $this->pending = $this->awaitingDelivery = [];
+        foreach ($waiting as $future) {
+            $future->error($reason);
         }
     }
 }

@@ -235,6 +235,51 @@ final class BiDiTest extends TestCase
         self::assertSame([1, 3], $seen);
     }
 
+    public function testWaitForReturnsOnceAnEventArrivingLaterMakesTheConditionHold(): void
+    {
+        $bidi = $this->connect(static function (): void {
+        });
+        $seen = [];
+        $this->connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
+            $seen[] = $n;
+        });
+        EventLoop::delay(0.05, fn () => $this->socket->push(self::event('test.happened', ['n' => 1])));
+
+        $started = microtime(true);
+        self::assertTrue($bidi->waitFor(static function () use (&$seen): bool {
+            return $seen !== [];
+        }, 1.0));
+        self::assertLessThan(0.5, microtime(true) - $started);
+    }
+
+    public function testWaitForReturnsFalseWhenTheConditionStillDoesNotHoldAfterTheTimeout(): void
+    {
+        $bidi = $this->connect(static function (): void {
+        });
+        $this->connection->addListener(self::happened(), static function (): void {
+        });
+        EventLoop::delay(0.02, fn () => $this->socket->push(self::event('test.happened', ['n' => 1])));
+
+        $started = microtime(true);
+        self::assertFalse($bidi->waitFor(static fn (): bool => false, 0.1));
+        self::assertGreaterThanOrEqual(0.1, microtime(true) - $started);
+    }
+
+    public function testWaitForThrowsWhyTheConnectionClosedWhileItWaited(): void
+    {
+        $bidi = $this->connect(static function (): void {
+        });
+        $cause = new ConnectionClosedException('Connection reset by peer');
+        EventLoop::delay(0.02, fn () => $this->socket->close($cause));
+
+        try {
+            $bidi->waitFor(static fn (): bool => false, 1.0);
+            self::fail('waitFor() did not throw');
+        } catch (ConnectionClosedException $e) {
+            self::assertSame($cause, $e->getPrevious());
+        }
+    }
+
     public function testSendBlocksSynchronousCodeUntilTheAnswerArrives(): void
     {
         $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {

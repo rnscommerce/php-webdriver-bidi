@@ -89,6 +89,26 @@ final class BiDi
         $this->connection->drain();
     }
 
+    /**
+     * Delivers events until the condition holds, checking it after drain() and again after each call to a listener.
+     * Returns false if it still does not hold after $timeout seconds.
+     *
+     * @param callable(): bool $condition
+     */
+    public function waitFor(callable $condition, float $timeout): bool
+    {
+        $deadline = microtime(true) + $timeout;
+        $this->drain();
+        while (!$condition()) {
+            $remaining = $deadline - microtime(true);
+            if ($remaining <= 0) {
+                return false;
+            }
+            $this->connection->awaitDelivery($remaining);
+        }
+        return true;
+    }
+
     public function isClosed(): bool
     {
         return $this->connection->isClosed();
