@@ -20,10 +20,12 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Rnscommerce\\WebDriver\\BiDi\\Tests\\": "tests/"
+            "Rnscommerce\\WebDriver\\BiDi\\Tests\\": "tests/",
+            "Rnscommerce\\WebDriver\\BiDi\\Generator\\": "tools/generator/"
         }
     },
     "scripts": {
+        "generate": "php tools/generate.php",
         "test": "phpunit",
         "stan": "phpstan analyse",
         "cs": "phpcs",

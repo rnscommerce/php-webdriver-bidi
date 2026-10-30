@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * Generated from schema/schema.json — do not edit, run composer generate.
+ */
+
+declare(strict_types=1);
+
+namespace Rnscommerce\WebDriver\BiDi\Script;
+
+use Rnscommerce\WebDriver\BiDi\Wire;
+
+final readonly class ArrayLocalValue implements LocalValue
+{
+    /**
+     * @param list<LocalValue> $value
+     */
+    public function __construct(
+        public array $value,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            value: Wire::records($data['value'] ?? null, LocalValueFactory::fromArray(...)),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(): array
+    {
+        return [
+            'type' => 'array',
+            'value' => Wire::encode($this->value),
+        ];
+    }
+}
