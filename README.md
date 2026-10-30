@@ -42,7 +42,7 @@ $bidi->drain();
 $bidi->removeListener($id);
 ```
 
-Events wait on the socket while nothing reads it. They reach their handlers during any command, or when `drain()` is called.
+Events wait on the socket while nothing reads it. They reach their handlers during any command, or when `drain()` is called, which delivers every event the browser sent before the call.
 
 ### Wait for events
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi;
 
+use Rnscommerce\WebDriver\BiDi\BrowsingContext\GetTreeParameters;
+use Rnscommerce\WebDriver\BiDi\Protocol\Module\BrowsingContext;
 use Rnscommerce\WebDriver\BiDi\Protocol\Module\Session;
 use Rnscommerce\WebDriver\BiDi\Session\SubscribeParameters;
 use Rnscommerce\WebDriver\BiDi\Session\UnsubscribeByIDRequest;
@@ -84,9 +86,12 @@ final class BiDi
         $this->send(Session::unsubscribe(new UnsubscribeByIDRequest([$id])));
     }
 
+    /**
+     * Delivers every event the browser sent before this call, by waiting for the answer to a command sent after them.
+     */
     public function drain(): void
     {
-        $this->connection->drain();
+        $this->send(BrowsingContext::getTree(new GetTreeParameters(0)));
     }
 
     /**

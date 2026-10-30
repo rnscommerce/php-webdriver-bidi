@@ -8,22 +8,17 @@ use Amp\DeferredFuture;
 use Revolt\EventLoop;
 use Rnscommerce\WebDriver\BiDi\Transport\WebSocket;
 
-use function Amp\delay;
-
 /**
  * Sends commands over one WebDriver BiDi socket, matches their answers, and passes events to listeners.
  *
- * A fiber reads the socket whenever the event loop runs: while a command is awaited, during drain(),
- * or under anything else that runs the loop. Called from code outside any fiber, an await runs the loop
- * until its own answer arrives.
+ * A fiber reads the socket whenever the event loop runs: while a command is awaited, or under anything else
+ * that runs the loop. Called from code outside any fiber, an await runs the loop until its own answer arrives.
  */
 final class Connection
 {
     private int $nextId = 1;
 
     private int $nextListenerId = 1;
-
-    private int $received = 0;
 
     private ?ConnectionClosedException $closedBy = null;
 
@@ -110,19 +105,6 @@ final class Connection
     }
 
     /**
-     * Delivers the events that arrived while the event loop was not running.
-     */
-    public function drain(): void
-    {
-        do {
-            $this->throwIfClosed();
-            $received = $this->received;
-            delay(0);
-        } while ($this->received !== $received);
-        $this->throwIfClosed();
-    }
-
-    /**
      * Runs the event loop until a listener has been called, or $timeout seconds pass.
      *
      * @throws ConnectionClosedException
@@ -165,7 +147,6 @@ final class Connection
     {
         try {
             while (($text = $this->socket->receive()) !== null) {
-                $this->received++;
                 $this->handle(json_decode($text, true));
             }
             $this->fail(new ConnectionClosedException('The BiDi connection closed'));

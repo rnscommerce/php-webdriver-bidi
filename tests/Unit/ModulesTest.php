@@ -89,7 +89,9 @@ final class ModulesTest extends TestCase
         self::assertSame(['https://magento.test/'], $urls);
         self::assertSame([
             ['session.subscribe', ['events' => ['browsingContext.load'], 'contexts' => [self::CONTEXT]]],
+            ['browsingContext.getTree', ['maxDepth' => 0]],
             ['session.unsubscribe', ['subscriptions' => ['subscription-1']]],
+            ['browsingContext.getTree', ['maxDepth' => 0]],
         ], $this->sent());
     }
 

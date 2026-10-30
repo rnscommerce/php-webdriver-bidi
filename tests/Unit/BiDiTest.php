@@ -280,6 +280,27 @@ final class BiDiTest extends TestCase
         }
     }
 
+    public function testDrainDeliversEventsThatArriveAfterItIsCalledAndBeforeItsAnswer(): void
+    {
+        $socket = new FakeWebSocket(static function (array $message, FakeWebSocket $socket): void {
+            EventLoop::delay(0.02, static function () use ($message, $socket): void {
+                $socket->push(self::event('test.happened', ['n' => 1]));
+                $socket->push(self::success($message['id'], ['contexts' => []]));
+            });
+        });
+        $connection = new Connection($socket);
+        $seen = [];
+        $connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
+            $seen[] = $n;
+        });
+
+        (new BiDi($connection, 1.0))->drain();
+
+        self::assertSame([1], $seen);
+        self::assertSame(['browsingContext.getTree'], array_column($socket->sent, 'method'));
+        self::assertSame([['maxDepth' => 0]], array_column($socket->sent, 'params'));
+    }
+
     public function testSendBlocksSynchronousCodeUntilTheAnswerArrives(): void
     {
         $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
@@ -306,8 +327,10 @@ final class BiDiTest extends TestCase
         });
 
         $bidi->send(self::command('test.act'));
-        $bidi->drain();
 
+        self::assertTrue($bidi->waitFor(static function () use (&$answers): bool {
+            return $answers !== [];
+        }, 1.0));
         self::assertSame(['test.react'], $answers);
     }
 
@@ -385,7 +408,13 @@ final class BiDiTest extends TestCase
      */
     private function connect(\Closure $remote, ?callable $onListenerError = null): BiDi
     {
-        $this->socket = new FakeWebSocket($remote);
+        $this->socket = new FakeWebSocket(static function (array $message, FakeWebSocket $socket) use ($remote): void {
+            if ($message['method'] === 'browsingContext.getTree') {
+                $socket->push(self::success($message['id'], ['contexts' => []]));
+                return;
+            }
+            $remote($message, $socket);
+        });
         $this->connection = new Connection($this->socket, $onListenerError);
         return new BiDi($this->connection, 1.0);
     }

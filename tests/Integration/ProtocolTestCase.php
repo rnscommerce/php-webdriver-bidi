@@ -427,20 +427,6 @@ abstract class ProtocolTestCase extends BrowserTestCase
         usleep(500000);
         $this->bidi->drain();
 
-        $arrivedWithDrain = $lengths !== [];
-        $this->waitFor(
-            function () use (&$lengths): bool {
-                return $lengths !== [];
-            },
-            'the large entry',
-            5.0,
-        );
-
-        if (!$arrivedWithDrain) {
-            self::markTestIncomplete(
-                'drain() returned before the 200 KB log entry was complete; it arrived on the next use',
-            );
-        }
         self::assertSame([200000], $lengths);
     }
 
