@@ -25,7 +25,7 @@
     },
     "scripts": {
         "test": "phpunit",
-        "stan": "if find src tests -name '*.php' | grep -q .; then phpstan analyse; else echo 'No PHP files to analyse yet'; fi",
+        "stan": "phpstan analyse",
         "cs": "phpcs",
         "cs-fix": "phpcbf",
         "check": [
