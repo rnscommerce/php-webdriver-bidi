@@ -443,6 +443,25 @@ abstract class ProtocolTestCase extends BrowserTestCase
         self::assertSame([200000], $lengths);
     }
 
+    public function testAMessageLargerThanTenMegabytesArrivesAndTheConnectionCarriesOn(): void
+    {
+        $lengths = [];
+        (new LogInspector($this->bidi))->onConsoleEntry(function (ConsoleLogEntry $e) use (&$lengths): void {
+            $lengths[] = strlen((string) $e->text);
+        });
+
+        $this->session->navigate($this->url('huge.html'));
+        $this->waitFor(
+            function () use (&$lengths): bool {
+                return $lengths !== [];
+            },
+            'the 11 MB entry',
+        );
+
+        self::assertSame([11 * 1024 * 1024], $lengths);
+        self::assertCount(1, (new BrowsingContext($this->bidi, $this->handle))->getTree());
+    }
+
     public function testListenersScopedToDifferentContextsHearOnlyTheirOwn(): void
     {
         $tab = BrowsingContext::create($this->bidi, new CreateParameters(CreateType::TAB));
