@@ -1,0 +1,8 @@
+php-webdriver-bidi
+Copyright 2026 rnscommerce
+
+schema/schema.json is copied unchanged from the Selenium project
+(https://github.com/SeleniumHQ/selenium, common/bidi/schema.json),
+Copyright Software Freedom Conservancy (SFC), licensed under the
+Apache License, Version 2.0 (https://www.apache.org/licenses/LICENSE-2.0).
+The commit it was copied from is recorded in schema/SOURCE.

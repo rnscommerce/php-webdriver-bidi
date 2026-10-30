@@ -1,0 +1,4 @@
+repository: https://github.com/SeleniumHQ/selenium
+path: common/bidi/schema.json
+commit: 9f4ca5a6e72b42826342aff5ce6bd6b9774d6b02
+sha256: b52748d1f375ca5b2b40198f5b3a8e38bc3b1a261202d17de541d3f2ba2ea4b7
