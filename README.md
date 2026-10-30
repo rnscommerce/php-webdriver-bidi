@@ -16,6 +16,8 @@ $bidi = BiDi::connect($webSocketUrl);
 
 A classic WebDriver window handle is the id of that window's browsing context.
 
+Once the connection has closed, because the session was deleted or the browser went away, `isClosed()` returns true and every command and `drain()` throws the same `ConnectionClosedException`, saying why.
+
 ### Listen to network and console events
 
 Each listener subscribes to its event in the browser, in the browsing contexts given or else in all of them, and returns an id that `removeListener` takes to unsubscribe:

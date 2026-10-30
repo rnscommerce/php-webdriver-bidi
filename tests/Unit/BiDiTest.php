@@ -139,6 +139,49 @@ final class BiDiTest extends TestCase
         $bidi->send(self::command('test.act'));
     }
 
+    public function testOnceTheSocketFailsEveryUseThrowsWhyAndSaysItIsClosed(): void
+    {
+        $bidi = $this->connect(static function (): void {
+        });
+        $cause = new ConnectionClosedException('Connection reset by peer');
+        $this->socket->close($cause);
+
+        try {
+            $bidi->send(self::command('test.act'));
+            self::fail('send() did not throw');
+        } catch (ConnectionClosedException $closed) {
+            self::assertSame($cause, $closed->getPrevious());
+        }
+        try {
+            $bidi->drain();
+            self::fail('drain() did not throw');
+        } catch (ConnectionClosedException $e) {
+            self::assertSame($closed, $e);
+        }
+        self::assertTrue($bidi->isClosed());
+    }
+
+    public function testAFailureWhileWaitingIsWhatLaterUsesThrow(): void
+    {
+        $cause = new ConnectionClosedException('Connection reset by peer');
+        $bidi = $this->connect(static function (array $message, FakeWebSocket $socket) use ($cause): void {
+            $socket->close($cause);
+        });
+
+        try {
+            $bidi->send(self::command('test.act'));
+            self::fail('send() did not throw');
+        } catch (ConnectionClosedException $closed) {
+            self::assertSame($cause, $closed->getPrevious());
+        }
+        try {
+            $bidi->send(self::command('test.act'));
+            self::fail('The second send() did not throw');
+        } catch (ConnectionClosedException $e) {
+            self::assertSame($closed, $e);
+        }
+    }
+
     public function testRemovedListenersReceiveNothing(): void
     {
         $bidi = $this->connect(static function (): void {

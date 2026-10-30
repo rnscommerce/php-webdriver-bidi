@@ -6,6 +6,7 @@ namespace Rnscommerce\WebDriver\BiDi\Tests;
 
 use Revolt\EventLoop;
 use Revolt\EventLoop\Suspension;
+use Rnscommerce\WebDriver\BiDi\ConnectionClosedException;
 use Rnscommerce\WebDriver\BiDi\Transport\WebSocket;
 
 /**
@@ -21,6 +22,8 @@ final class FakeWebSocket implements WebSocket
 
     private bool $closed = false;
 
+    private ?ConnectionClosedException $failure = null;
+
     /** @var Suspension<null>|null */
     private ?Suspension $receiver = null;
 
@@ -33,6 +36,9 @@ final class FakeWebSocket implements WebSocket
 
     public function sendText(string $text): void
     {
+        if ($this->failure !== null) {
+            throw $this->failure;
+        }
         /** @var array<string, mixed> $message */
         $message = json_decode($text, true, 512, JSON_THROW_ON_ERROR);
         $this->sent[] = $message;
@@ -45,12 +51,19 @@ final class FakeWebSocket implements WebSocket
             $this->receiver = EventLoop::getSuspension();
             $this->receiver->suspend();
         }
+        if ($this->incoming === [] && $this->failure !== null) {
+            throw $this->failure;
+        }
         return array_shift($this->incoming);
     }
 
-    public function close(): void
+    /**
+     * Closes the socket, or fails it with what sending and receiving then throw.
+     */
+    public function close(?ConnectionClosedException $failure = null): void
     {
         $this->closed = true;
+        $this->failure = $failure;
         $this->wake();
     }
 

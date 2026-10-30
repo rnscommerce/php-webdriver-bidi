@@ -89,6 +89,11 @@ final class BiDi
         $this->connection->drain();
     }
 
+    public function isClosed(): bool
+    {
+        return $this->connection->isClosed();
+    }
+
     public function close(): void
     {
         $this->connection->close();

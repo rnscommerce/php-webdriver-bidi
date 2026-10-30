@@ -17,7 +17,9 @@ interface WebSocket
     public function sendText(string $text): void;
 
     /**
-     * The next text message, or null once the socket has closed.
+     * The next text message, or null once this end has closed the socket.
+     *
+     * @throws ConnectionClosedException when the remote end closed the socket, or it failed
      */
     public function receive(): ?string;
 

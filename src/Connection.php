@@ -25,7 +25,7 @@ final class Connection
 
     private int $received = 0;
 
-    private bool $closed = false;
+    private ?ConnectionClosedException $closedBy = null;
 
     /** @var \Closure(\Throwable): void */
     private readonly \Closure $onListenerError;
@@ -57,9 +57,7 @@ final class Connection
      */
     public function sendAndWait(Command $command, float $timeout): mixed
     {
-        if ($this->closed) {
-            throw new ConnectionClosedException('The BiDi connection is closed');
-        }
+        $this->throwIfClosed();
         $id = $this->nextId++;
         /** @var DeferredFuture<array<string, mixed>> $answer */
         $answer = new DeferredFuture();
@@ -70,11 +68,15 @@ final class Connection
             ));
         });
         try {
-            // Cast, because an empty array would encode as a JSON list where BiDi requires an object.
-            $this->socket->sendText(json_encode(
-                ['id' => $id, 'method' => $command->getMethod(), 'params' => (object) $command->getParams()],
-                JSON_THROW_ON_ERROR,
-            ));
+            try {
+                // Cast, because an empty array would encode as a JSON list where BiDi requires an object.
+                $this->socket->sendText(json_encode(
+                    ['id' => $id, 'method' => $command->getMethod(), 'params' => (object) $command->getParams()],
+                    JSON_THROW_ON_ERROR,
+                ));
+            } catch (ConnectionClosedException $e) {
+                $this->failWith($e);
+            }
             $result = $answer->getFuture()->await();
         } finally {
             EventLoop::cancel($timer);
@@ -110,14 +112,21 @@ final class Connection
     public function drain(): void
     {
         do {
+            $this->throwIfClosed();
             $received = $this->received;
             delay(0);
         } while ($this->received !== $received);
+        $this->throwIfClosed();
+    }
+
+    public function isClosed(): bool
+    {
+        return $this->closedBy !== null;
     }
 
     public function close(): void
     {
-        if ($this->closed) {
+        if ($this->isClosed()) {
             return;
         }
         $this->fail(new ConnectionClosedException('The BiDi connection was closed'));
@@ -133,8 +142,13 @@ final class Connection
             }
             $this->fail(new ConnectionClosedException('The BiDi connection closed'));
         } catch (\Throwable $e) {
-            $this->fail(new ConnectionClosedException('The BiDi connection failed: ' . $e->getMessage(), 0, $e));
+            $this->failWith($e);
         }
+    }
+
+    private function failWith(\Throwable $cause): void
+    {
+        $this->fail(new ConnectionClosedException('The BiDi connection failed: ' . $cause->getMessage(), 0, $cause));
     }
 
     private function handle(mixed $message): void
@@ -210,9 +224,22 @@ final class Connection
         }
     }
 
+    /**
+     * @throws ConnectionClosedException why the connection closed
+     */
+    private function throwIfClosed(): void
+    {
+        if ($this->closedBy !== null) {
+            throw $this->closedBy;
+        }
+    }
+
     private function fail(ConnectionClosedException $reason): void
     {
-        $this->closed = true;
+        if ($this->closedBy !== null) {
+            return;
+        }
+        $this->closedBy = $reason;
         $pending = $this->pending;
         $this->pending = [];
         foreach ($pending as $answer) {

@@ -10,6 +10,7 @@ use Amp\Websocket\Client\WebsocketConnection;
 use Amp\Websocket\Client\WebsocketHandshake;
 use Amp\Websocket\Parser\Rfc6455ParserFactory;
 use Amp\Websocket\WebsocketClosedException;
+use Amp\Websocket\WebsocketCloseCode;
 use Rnscommerce\WebDriver\BiDi\ConnectionClosedException;
 
 final class AmpWebSocket implements WebSocket
@@ -36,17 +37,36 @@ final class AmpWebSocket implements WebSocket
         try {
             $this->connection->sendText($text);
         } catch (WebsocketClosedException $e) {
-            throw new ConnectionClosedException('The BiDi connection closed', 0, $e);
+            throw $this->closed($e);
         }
     }
 
     public function receive(): ?string
     {
-        return $this->connection->receive()?->buffer();
+        $message = $this->connection->receive();
+        if ($message !== null) {
+            return $message->buffer();
+        }
+        $info = $this->connection->getCloseInfo();
+        if (!$info->isByPeer() && $info->getCode() === WebsocketCloseCode::NORMAL_CLOSE) {
+            return null;
+        }
+        throw $this->closed();
     }
 
     public function close(): void
     {
         $this->connection->close();
+    }
+
+    private function closed(?\Throwable $previous = null): ConnectionClosedException
+    {
+        $info = $this->connection->getCloseInfo();
+        return new ConnectionClosedException(sprintf(
+            'The WebSocket was closed by %s with code %d%s',
+            $info->isByPeer() ? 'the remote end' : 'this end',
+            $info->getCode(),
+            $info->getReason() === '' ? '' : ": {$info->getReason()}",
+        ), 0, $previous);
     }
 }

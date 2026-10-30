@@ -9,6 +9,7 @@ use Rnscommerce\WebDriver\BiDi\BrowsingContext\ContextCreatedParameters;
 use Rnscommerce\WebDriver\BiDi\BrowsingContext\CreateParameters;
 use Rnscommerce\WebDriver\BiDi\BrowsingContext\CreateType;
 use Rnscommerce\WebDriver\BiDi\BrowsingContext\NavigationInfo;
+use Rnscommerce\WebDriver\BiDi\ConnectionClosedException;
 use Rnscommerce\WebDriver\BiDi\ErrorResponseException;
 use Rnscommerce\WebDriver\BiDi\Log\ConsoleLogEntry;
 use Rnscommerce\WebDriver\BiDi\Log\JavascriptLogEntry;
@@ -460,6 +461,29 @@ abstract class ProtocolTestCase extends BrowserTestCase
 
         self::assertSame([11 * 1024 * 1024], $lengths);
         self::assertCount(1, (new BrowsingContext($this->bidi, $this->handle))->getTree());
+    }
+
+    public function testDeletingTheSessionClosesTheConnectionAndEveryUseSaysWhy(): void
+    {
+        (new LogInspector($this->bidi))->onConsoleEntry(static function (): void {
+        });
+
+        $this->session->delete();
+        try {
+            $this->waitFor(static fn (): bool => false, 'the connection to close');
+            self::fail('The connection did not close');
+        } catch (ConnectionClosedException $closed) {
+            self::assertStringContainsString('closed by the remote end', $closed->getMessage());
+            self::assertInstanceOf(ConnectionClosedException::class, $closed->getPrevious());
+        }
+
+        self::assertTrue($this->bidi->isClosed());
+        try {
+            $this->bidi->send(Session::unsubscribe(new UnsubscribeByIDRequest(['none'])));
+            self::fail('send() did not throw');
+        } catch (ConnectionClosedException $e) {
+            self::assertSame($closed, $e);
+        }
     }
 
     public function testListenersScopedToDifferentContextsHearOnlyTheirOwn(): void

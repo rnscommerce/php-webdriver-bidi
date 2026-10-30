@@ -9,6 +9,8 @@ namespace Rnscommerce\WebDriver\BiDi\Tests\Integration;
  */
 final class WebDriverSession
 {
+    private bool $deleted = false;
+
     private function __construct(
         private readonly string $driverUrl,
         public readonly string $id,
@@ -54,6 +56,10 @@ final class WebDriverSession
 
     public function delete(): void
     {
+        if ($this->deleted) {
+            return;
+        }
+        $this->deleted = true;
         self::request('DELETE', "{$this->driverUrl}/session/{$this->id}");
     }
 
