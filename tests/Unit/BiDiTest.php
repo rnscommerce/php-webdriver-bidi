@@ -218,6 +218,58 @@ final class BiDiTest extends TestCase
         self::assertSame([], $seen);
     }
 
+    public function testClearingListenersUnsubscribesEachAndRemovesThoseTheBrowserRefuses(): void
+    {
+        $subscriptions = 0;
+        $bidi = $this->connect(static function (array $message, FakeWebSocket $socket) use (&$subscriptions): void {
+            $params = $message['params'];
+            self::assertIsArray($params);
+            if ($params === ['subscriptions' => ['subscription-1']]) {
+                $socket->push([
+                    'type' => 'error',
+                    'id' => $message['id'],
+                    'error' => 'invalid argument',
+                    'message' => 'Unknown subscription',
+                ]);
+                return;
+            }
+            $socket->push(self::success($message['id'], ['subscription' => 'subscription-' . ++$subscriptions]));
+        });
+        $seen = 0;
+        $count = static function () use (&$seen): void {
+            $seen++;
+        };
+        $bidi->addListener(self::happened(), $count);
+        $bidi->addListener(self::happened(), $count);
+
+        $bidi->clearListeners();
+        $this->socket->push(self::event('test.happened', ['n' => 1]));
+        $bidi->drain();
+
+        self::assertSame(0, $seen);
+        self::assertSame(
+            [['subscriptions' => ['subscription-1']], ['subscriptions' => ['subscription-2']]],
+            array_column(array_filter(
+                $this->socket->sent,
+                static fn (array $message): bool => $message['method'] === 'session.unsubscribe',
+            ), 'params'),
+        );
+    }
+
+    public function testClearingListenersOnAClosedConnectionRemovesThemWithoutThrowing(): void
+    {
+        $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
+            $socket->push(self::success($message['id'], ['subscription' => 'subscription-1']));
+        });
+        $bidi->addListener(self::happened(), static function (): void {
+        });
+        $bidi->close();
+
+        $bidi->clearListeners();
+
+        self::assertSame(['session.subscribe'], array_column($this->socket->sent, 'method'));
+    }
+
     public function testDrainDeliversEventsThatArrivedWhileNothingWasSending(): void
     {
         $bidi = $this->connect(static function (): void {

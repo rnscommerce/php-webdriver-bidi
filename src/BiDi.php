@@ -87,6 +87,19 @@ final class BiDi
     }
 
     /**
+     * Removes every listener, unsubscribing from each event where the browser and the connection still allow it.
+     */
+    public function clearListeners(): void
+    {
+        foreach (array_keys($this->listeners) as $id) {
+            try {
+                $this->removeListener((string) $id);
+            } catch (BiDiException) {
+            }
+        }
+    }
+
+    /**
      * Delivers every event the browser sent before this call, by waiting for the answer to a command sent after them.
      */
     public function drain(): void

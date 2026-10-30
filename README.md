@@ -42,6 +42,8 @@ $bidi->drain();
 $bidi->removeListener($id);
 ```
 
+`clearListeners()` removes every listener at once. It unsubscribes where it still can and never throws, so it is safe in a teardown after the session has gone.
+
 Events wait on the socket while nothing reads it. They reach their handlers during any command, or when `drain()` is called, which delivers every event the browser sent before the call.
 
 ### Wait for events

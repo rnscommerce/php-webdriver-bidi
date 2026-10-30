@@ -472,6 +472,20 @@ abstract class ProtocolTestCase extends BrowserTestCase
         }
     }
 
+    public function testClearingListenersAfterTheSessionIsDeletedDoesNotThrow(): void
+    {
+        (new LogInspector($this->bidi))->onConsoleEntry(static function (): void {
+        });
+        (new Network($this->bidi))->onBeforeRequestSent(static function (): void {
+        });
+
+        $this->session->delete();
+        $started = microtime(true);
+        $this->bidi->clearListeners();
+
+        self::assertLessThan(5.0, microtime(true) - $started);
+    }
+
     public function testListenersScopedToDifferentContextsHearOnlyTheirOwn(): void
     {
         $tab = BrowsingContext::create($this->bidi, new CreateParameters(CreateType::TAB));
