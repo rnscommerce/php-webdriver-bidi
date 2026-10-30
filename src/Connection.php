@@ -187,17 +187,26 @@ final class Connection
      */
     private function dispatch(string $method, array $params): void
     {
-        foreach ($this->listeners as [$listened, $deliver]) {
-            if ($listened !== $method) {
-                continue;
+        foreach ($this->listeners as $id => [$listened]) {
+            if ($listened === $method) {
+                EventLoop::queue($this->deliver(...), $id, $params);
             }
-            EventLoop::queue(function () use ($deliver, $params): void {
-                try {
-                    $deliver($params);
-                } catch (\Throwable $e) {
-                    ($this->onListenerError)($e);
-                }
-            });
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
+    private function deliver(int $id, array $params): void
+    {
+        $listener = $this->listeners[$id] ?? null;
+        if ($listener === null) {
+            return;
+        }
+        try {
+            $listener[1]($params);
+        } catch (\Throwable $e) {
+            ($this->onListenerError)($e);
         }
     }
 

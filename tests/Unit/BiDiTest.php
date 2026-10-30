@@ -157,6 +157,24 @@ final class BiDiTest extends TestCase
         self::assertSame([1], $seen);
     }
 
+    public function testAListenerRemovedBeforeItsQueuedEventIsDeliveredReceivesNothing(): void
+    {
+        $bidi = $this->connect(static function (array $message, FakeWebSocket $socket): void {
+            $socket->push(self::success($message['id'], ['value' => 'done']));
+            $socket->push(self::event('test.happened', ['n' => 1]));
+        });
+        $seen = [];
+        $id = $this->connection->addListener(self::happened(), static function (int $n) use (&$seen): void {
+            $seen[] = $n;
+        });
+
+        $bidi->send(self::command('test.act'));
+        $this->connection->removeListener($id);
+        $bidi->drain();
+
+        self::assertSame([], $seen);
+    }
+
     public function testDrainDeliversEventsThatArrivedWhileNothingWasSending(): void
     {
         $bidi = $this->connect(static function (): void {
