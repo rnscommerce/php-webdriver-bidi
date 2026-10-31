@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  check:
+  unit:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -19,7 +19,12 @@ jobs:
           tools: composer
           coverage: none
       - run: composer install --no-interaction --prefer-dist
-      - run: composer check
+      - name: Code style
+        run: composer cs
+      - name: PHPStan
+        run: composer stan
+      - name: Unit tests
+        run: composer test
 
   integration:
     runs-on: ubuntu-latest
