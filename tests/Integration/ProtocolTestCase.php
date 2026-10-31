@@ -34,6 +34,7 @@ use Rnscommerce\WebDriver\BiDi\Script\ChannelValue;
 use Rnscommerce\WebDriver\BiDi\Script\EvaluationResultSuccess;
 use Rnscommerce\WebDriver\BiDi\Script\MessageParameters;
 use Rnscommerce\WebDriver\BiDi\Script\NumberValue;
+use Rnscommerce\WebDriver\BiDi\Script\SharedReference;
 use Rnscommerce\WebDriver\BiDi\Script\StringValue;
 use Rnscommerce\WebDriver\BiDi\Session\UnsubscribeByIDRequest;
 
@@ -76,6 +77,23 @@ abstract class ProtocolTestCase extends BrowserTestCase
         self::assertInstanceOf(EvaluationResultSuccess::class, $result);
         self::assertInstanceOf(NumberValue::class, $result->result);
         self::assertSame(2, $result->result->value);
+    }
+
+    public function testCallFunctionTakesAWebDriverElementAsASharedReference(): void
+    {
+        $this->session->navigate($this->url('probe.html'));
+        $element = $this->session->findElement('p');
+
+        $result = (new Script($this->bidi))->callFunctionInBrowsingContext(
+            $this->handle,
+            '(element, suffix) => element.textContent + suffix',
+            true,
+            [new SharedReference($element), new StringValue('!')],
+        );
+
+        self::assertInstanceOf(EvaluationResultSuccess::class, $result);
+        self::assertInstanceOf(StringValue::class, $result->result);
+        self::assertSame('probe!', $result->result->value);
     }
 
     public function testPreloadScriptChannelMessagesReachOnMessage(): void

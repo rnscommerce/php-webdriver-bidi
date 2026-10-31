@@ -49,6 +49,16 @@ final class WebDriverSession
         return is_string($handle) ? $handle : throw new \RuntimeException('No window handle');
     }
 
+    /**
+     * @return string the element's WebDriver id
+     */
+    public function findElement(string $css): string
+    {
+        $element = $this->command('POST', '/element', ['using' => 'css selector', 'value' => $css]);
+        $id = is_array($element) ? ($element['element-6066-11e4-a52e-4f735466cecf'] ?? null) : null;
+        return is_string($id) ? $id : throw new \RuntimeException("No element $css");
+    }
+
     public function switchToWindow(string $handle): void
     {
         $this->command('POST', '/window', ['handle' => $handle]);
