@@ -12,14 +12,14 @@ use Rnscommerce\WebDriver\BiDi\Script\Source;
 use Rnscommerce\WebDriver\BiDi\Script\StackTrace;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class JavascriptLogEntry implements Entry
+final class JavascriptLogEntry implements Entry
 {
     public function __construct(
-        public Level $level,
-        public Source $source,
-        public ?string $text,
-        public int $timestamp,
-        public ?StackTrace $stackTrace = null,
+        public readonly Level $level,
+        public readonly Source $source,
+        public readonly ?string $text,
+        public readonly int $timestamp,
+        public readonly ?StackTrace $stackTrace = null,
     ) {
     }
 

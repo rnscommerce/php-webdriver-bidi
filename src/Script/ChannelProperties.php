@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ChannelProperties
+final class ChannelProperties
 {
     public function __construct(
-        public string $channel,
-        public ?SerializationOptions $serializationOptions = null,
-        public ?ResultOwnership $ownership = null,
+        public readonly string $channel,
+        public readonly ?SerializationOptions $serializationOptions = null,
+        public readonly ?ResultOwnership $ownership = null,
     ) {
     }
 

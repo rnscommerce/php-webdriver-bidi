@@ -14,19 +14,19 @@ use Rnscommerce\WebDriver\BiDi\Script\Source;
 use Rnscommerce\WebDriver\BiDi\Script\StackTrace;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ConsoleLogEntry implements Entry
+final class ConsoleLogEntry implements Entry
 {
     /**
      * @param list<RemoteValue> $args
      */
     public function __construct(
-        public Level $level,
-        public Source $source,
-        public ?string $text,
-        public int $timestamp,
-        public string $method,
-        public array $args,
-        public ?StackTrace $stackTrace = null,
+        public readonly Level $level,
+        public readonly Source $source,
+        public readonly ?string $text,
+        public readonly int $timestamp,
+        public readonly string $method,
+        public readonly array $args,
+        public readonly ?StackTrace $stackTrace = null,
     ) {
     }
 

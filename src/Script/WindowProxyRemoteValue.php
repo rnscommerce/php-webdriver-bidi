@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class WindowProxyRemoteValue implements RemoteValue
+final class WindowProxyRemoteValue implements RemoteValue
 {
     public function __construct(
-        public WindowProxyProperties $value,
-        public ?string $handle = null,
-        public ?string $internalId = null,
+        public readonly WindowProxyProperties $value,
+        public readonly ?string $handle = null,
+        public readonly ?string $internalId = null,
     ) {
     }
 

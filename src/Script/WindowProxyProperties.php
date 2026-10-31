@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class WindowProxyProperties
+final class WindowProxyProperties
 {
     public function __construct(
-        public string $context,
+        public readonly string $context,
     ) {
     }
 

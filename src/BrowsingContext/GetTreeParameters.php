@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class GetTreeParameters
+final class GetTreeParameters
 {
     public function __construct(
-        public ?int $maxDepth = null,
-        public ?string $root = null,
+        public readonly ?int $maxDepth = null,
+        public readonly ?string $root = null,
     ) {
     }
 

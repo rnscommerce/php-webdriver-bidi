@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class WeakMapRemoteValue implements RemoteValue
+final class WeakMapRemoteValue implements RemoteValue
 {
     public function __construct(
-        public ?string $handle = null,
-        public ?string $internalId = null,
+        public readonly ?string $handle = null,
+        public readonly ?string $internalId = null,
     ) {
     }
 

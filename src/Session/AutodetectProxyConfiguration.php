@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi\Session;
 
-final readonly class AutodetectProxyConfiguration implements ProxyConfiguration
+final class AutodetectProxyConfiguration implements ProxyConfiguration
 {
     /**
      * @param array<string, mixed> $data

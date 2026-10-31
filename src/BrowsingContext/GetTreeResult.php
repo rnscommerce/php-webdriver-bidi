@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class GetTreeResult
+final class GetTreeResult
 {
     /**
      * @param list<Info> $contexts
      */
     public function __construct(
-        public array $contexts,
+        public readonly array $contexts,
     ) {
     }
 

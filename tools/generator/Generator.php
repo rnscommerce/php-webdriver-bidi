@@ -194,7 +194,7 @@ final class Generator
                     $docs .= "     * @param {$doc} \${$property['name']}\n";
                 }
                 $default = $property['required'] ? '' : ' = null';
-                $params .= "        public {$php} \${$property['name']}{$default},\n";
+                $params .= "        public readonly {$php} \${$property['name']}{$default},\n";
             }
             $docs = $docs === '' ? '' : "    /**\n{$docs}     */\n";
             $methods[] = "{$docs}    public function __construct(\n{$params}    ) {\n    }";
@@ -244,7 +244,7 @@ final class Generator
             PHP;
 
         $implements = $this->parents($name);
-        $declaration = 'final readonly class';
+        $declaration = 'final class';
         return $this->file(
             $this->fqcn($name),
             $implements === [] ? $declaration : $declaration . ' %s implements ' . \implode(', ', $implements),

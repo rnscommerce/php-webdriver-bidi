@@ -10,7 +10,7 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class AddPreloadScriptParameters
+final class AddPreloadScriptParameters
 {
     /**
      * @param ?list<ChannelValue> $arguments
@@ -18,11 +18,11 @@ final readonly class AddPreloadScriptParameters
      * @param ?list<string> $userContexts
      */
     public function __construct(
-        public string $functionDeclaration,
-        public ?array $arguments = null,
-        public ?array $contexts = null,
-        public ?array $userContexts = null,
-        public ?string $sandbox = null,
+        public readonly string $functionDeclaration,
+        public readonly ?array $arguments = null,
+        public readonly ?array $contexts = null,
+        public readonly ?array $userContexts = null,
+        public readonly ?string $sandbox = null,
     ) {
     }
 

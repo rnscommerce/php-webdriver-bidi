@@ -10,20 +10,20 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CallFunctionParameters
+final class CallFunctionParameters
 {
     /**
      * @param ?list<LocalValue> $arguments
      */
     public function __construct(
-        public string $functionDeclaration,
-        public bool $awaitPromise,
-        public Target $target,
-        public ?array $arguments = null,
-        public ?ResultOwnership $resultOwnership = null,
-        public ?SerializationOptions $serializationOptions = null,
-        public ?LocalValue $this_ = null,
-        public ?bool $userActivation = null,
+        public readonly string $functionDeclaration,
+        public readonly bool $awaitPromise,
+        public readonly Target $target,
+        public readonly ?array $arguments = null,
+        public readonly ?ResultOwnership $resultOwnership = null,
+        public readonly ?SerializationOptions $serializationOptions = null,
+        public readonly ?LocalValue $this_ = null,
+        public readonly ?bool $userActivation = null,
     ) {
     }
 

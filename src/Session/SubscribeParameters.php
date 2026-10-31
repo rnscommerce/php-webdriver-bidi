@@ -10,7 +10,7 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class SubscribeParameters
+final class SubscribeParameters
 {
     /**
      * @param list<string> $events
@@ -18,9 +18,9 @@ final readonly class SubscribeParameters
      * @param ?list<string> $userContexts
      */
     public function __construct(
-        public array $events,
-        public ?array $contexts = null,
-        public ?array $userContexts = null,
+        public readonly array $events,
+        public readonly ?array $contexts = null,
+        public readonly ?array $userContexts = null,
     ) {
     }
 

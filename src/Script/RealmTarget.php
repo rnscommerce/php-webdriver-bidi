@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RealmTarget implements Target
+final class RealmTarget implements Target
 {
     public function __construct(
-        public string $realm,
+        public readonly string $realm,
     ) {
     }
 

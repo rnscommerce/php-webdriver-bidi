@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ContextTarget implements Target
+final class ContextTarget implements Target
 {
     public function __construct(
-        public string $context,
-        public ?string $sandbox = null,
+        public readonly string $context,
+        public readonly ?string $sandbox = null,
     ) {
     }
 

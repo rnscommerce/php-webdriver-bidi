@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class SerializationOptions
+final class SerializationOptions
 {
     public function __construct(
-        public ?int $maxDomDepth = null,
-        public ?int $maxObjectDepth = null,
-        public ?SerializationOptionsIncludeShadowTree $includeShadowTree = null,
+        public readonly ?int $maxDomDepth = null,
+        public readonly ?int $maxObjectDepth = null,
+        public readonly ?SerializationOptionsIncludeShadowTree $includeShadowTree = null,
     ) {
     }
 

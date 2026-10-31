@@ -13,12 +13,12 @@ use Rnscommerce\WebDriver\BiDi\Session\ProxyConfigurationFactory;
 use Rnscommerce\WebDriver\BiDi\Session\UserPromptHandler;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CreateUserContextParameters
+final class CreateUserContextParameters
 {
     public function __construct(
-        public ?bool $acceptInsecureCerts = null,
-        public ?ProxyConfiguration $proxy = null,
-        public ?UserPromptHandler $unhandledPromptBehavior = null,
+        public readonly ?bool $acceptInsecureCerts = null,
+        public readonly ?ProxyConfiguration $proxy = null,
+        public readonly ?UserPromptHandler $unhandledPromptBehavior = null,
     ) {
     }
 

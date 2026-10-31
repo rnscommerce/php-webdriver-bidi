@@ -10,14 +10,14 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class NavigationInfo
+final class NavigationInfo
 {
     public function __construct(
-        public string $context,
-        public ?string $navigation,
-        public int $timestamp,
-        public string $url,
-        public ?string $userContext = null,
+        public readonly string $context,
+        public readonly ?string $navigation,
+        public readonly int $timestamp,
+        public readonly string $url,
+        public readonly ?string $userContext = null,
     ) {
     }
 

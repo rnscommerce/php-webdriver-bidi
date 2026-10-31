@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ImageSize
+final class ImageSize
 {
     public function __construct(
-        public ?int $maxWidth = null,
-        public ?int $maxHeight = null,
+        public readonly ?int $maxWidth = null,
+        public readonly ?int $maxHeight = null,
     ) {
     }
 

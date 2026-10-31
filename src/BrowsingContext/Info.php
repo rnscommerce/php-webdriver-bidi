@@ -10,19 +10,19 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class Info
+final class Info
 {
     /**
      * @param ?list<Info> $children
      */
     public function __construct(
-        public ?array $children,
-        public string $clientWindow,
-        public string $context,
-        public ?string $originalOpener,
-        public string $url,
-        public string $userContext,
-        public ?string $parent = null,
+        public readonly ?array $children,
+        public readonly string $clientWindow,
+        public readonly string $context,
+        public readonly ?string $originalOpener,
+        public readonly string $url,
+        public readonly string $userContext,
+        public readonly ?string $parent = null,
     ) {
     }
 

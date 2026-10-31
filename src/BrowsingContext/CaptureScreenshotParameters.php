@@ -10,14 +10,14 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CaptureScreenshotParameters
+final class CaptureScreenshotParameters
 {
     public function __construct(
-        public string $context,
-        public ?CaptureScreenshotParametersOrigin $origin = null,
-        public ?ImageFormat $format = null,
-        public ?ClipRectangle $clip = null,
-        public ?ImageSize $imageSize = null,
+        public readonly string $context,
+        public readonly ?CaptureScreenshotParametersOrigin $origin = null,
+        public readonly ?ImageFormat $format = null,
+        public readonly ?ClipRectangle $clip = null,
+        public readonly ?ImageSize $imageSize = null,
     ) {
     }
 

@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CloseParameters
+final class CloseParameters
 {
     public function __construct(
-        public string $context,
-        public ?bool $promptUnload = null,
+        public readonly string $context,
+        public readonly ?bool $promptUnload = null,
     ) {
     }
 

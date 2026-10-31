@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CreateParameters
+final class CreateParameters
 {
     public function __construct(
-        public CreateType $type,
-        public ?string $referenceContext = null,
-        public ?bool $background = null,
-        public ?string $userContext = null,
+        public readonly CreateType $type,
+        public readonly ?string $referenceContext = null,
+        public readonly ?bool $background = null,
+        public readonly ?string $userContext = null,
     ) {
     }
 

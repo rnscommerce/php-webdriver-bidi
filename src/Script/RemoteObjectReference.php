@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RemoteObjectReference implements RemoteReference
+final class RemoteObjectReference implements RemoteReference
 {
     public function __construct(
-        public string $handle,
-        public ?string $sharedId = null,
+        public readonly string $handle,
+        public readonly ?string $sharedId = null,
     ) {
     }
 

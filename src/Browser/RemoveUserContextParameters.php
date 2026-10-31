@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Browser;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RemoveUserContextParameters
+final class RemoveUserContextParameters
 {
     public function __construct(
-        public string $userContext,
+        public readonly string $userContext,
     ) {
     }
 

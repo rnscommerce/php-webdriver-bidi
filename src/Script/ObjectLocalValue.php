@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ObjectLocalValue implements LocalValue
+final class ObjectLocalValue implements LocalValue
 {
     /**
      * @param list<list<LocalValue|string>> $value
      */
     public function __construct(
-        public array $value,
+        public readonly array $value,
     ) {
     }
 

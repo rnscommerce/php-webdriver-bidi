@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class Source
+final class Source
 {
     public function __construct(
-        public string $realm,
-        public ?string $context = null,
-        public ?string $userContext = null,
+        public readonly string $realm,
+        public readonly ?string $context = null,
+        public readonly ?string $userContext = null,
     ) {
     }
 

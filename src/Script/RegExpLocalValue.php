@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RegExpLocalValue implements LocalValue
+final class RegExpLocalValue implements LocalValue
 {
     public function __construct(
-        public RegExpValue $value,
+        public readonly RegExpValue $value,
     ) {
     }
 

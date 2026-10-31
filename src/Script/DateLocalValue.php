@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class DateLocalValue implements LocalValue
+final class DateLocalValue implements LocalValue
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {
     }
 

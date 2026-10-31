@@ -11,10 +11,10 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 use Rnscommerce\WebDriver\BiDi\Script\SharedReference;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ElementClipRectangle implements ClipRectangle
+final class ElementClipRectangle implements ClipRectangle
 {
     public function __construct(
-        public SharedReference $element,
+        public readonly SharedReference $element,
     ) {
     }
 

@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class StartScreencastResult
+final class StartScreencastResult
 {
     public function __construct(
-        public string $screencast,
-        public string $path,
+        public readonly string $screencast,
+        public readonly string $path,
     ) {
     }
 

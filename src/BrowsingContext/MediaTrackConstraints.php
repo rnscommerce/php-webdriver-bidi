@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class MediaTrackConstraints
+final class MediaTrackConstraints
 {
     public function __construct(
-        public ?int $width = null,
-        public ?int $height = null,
-        public ?int $frameRate = null,
+        public readonly ?int $width = null,
+        public readonly ?int $height = null,
+        public readonly ?int $frameRate = null,
     ) {
     }
 

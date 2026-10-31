@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class GetDataResult
+final class GetDataResult
 {
     public function __construct(
-        public BytesValue $bytes,
+        public readonly BytesValue $bytes,
     ) {
     }
 

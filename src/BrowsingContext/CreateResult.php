@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CreateResult
+final class CreateResult
 {
     public function __construct(
-        public string $context,
-        public ?string $userContext = null,
+        public readonly string $context,
+        public readonly ?string $userContext = null,
     ) {
     }
 

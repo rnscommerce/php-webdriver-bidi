@@ -10,22 +10,22 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class FetchTimingInfo
+final class FetchTimingInfo
 {
     public function __construct(
-        public int|float $timeOrigin,
-        public int|float $requestTime,
-        public int|float $redirectStart,
-        public int|float $redirectEnd,
-        public int|float $fetchStart,
-        public int|float $dnsStart,
-        public int|float $dnsEnd,
-        public int|float $connectStart,
-        public int|float $connectEnd,
-        public int|float $tlsStart,
-        public int|float $requestStart,
-        public int|float $responseStart,
-        public int|float $responseEnd,
+        public readonly int|float $timeOrigin,
+        public readonly int|float $requestTime,
+        public readonly int|float $redirectStart,
+        public readonly int|float $redirectEnd,
+        public readonly int|float $fetchStart,
+        public readonly int|float $dnsStart,
+        public readonly int|float $dnsEnd,
+        public readonly int|float $connectStart,
+        public readonly int|float $connectEnd,
+        public readonly int|float $tlsStart,
+        public readonly int|float $requestStart,
+        public readonly int|float $responseStart,
+        public readonly int|float $responseEnd,
     ) {
     }
 

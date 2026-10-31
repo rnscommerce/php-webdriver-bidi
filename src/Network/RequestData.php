@@ -10,23 +10,23 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RequestData
+final class RequestData
 {
     /**
      * @param list<Header> $headers
      * @param list<Cookie> $cookies
      */
     public function __construct(
-        public string $request,
-        public string $url,
-        public string $method,
-        public array $headers,
-        public array $cookies,
-        public int $headersSize,
-        public ?int $bodySize,
-        public string $destination,
-        public ?string $initiatorType,
-        public FetchTimingInfo $timings,
+        public readonly string $request,
+        public readonly string $url,
+        public readonly string $method,
+        public readonly array $headers,
+        public readonly array $cookies,
+        public readonly int $headersSize,
+        public readonly ?int $bodySize,
+        public readonly string $destination,
+        public readonly ?string $initiatorType,
+        public readonly FetchTimingInfo $timings,
     ) {
     }
 

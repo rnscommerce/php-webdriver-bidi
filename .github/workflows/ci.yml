@@ -26,6 +26,21 @@ jobs:
       - name: Unit tests
         run: composer test
 
+  lowest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          coverage: none
+      - run: composer update --no-interaction --prefer-dist --prefer-lowest --prefer-stable
+      - name: Lint every file
+        run: find src tests tools -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: Unit tests
+        run: composer test
+
   integration:
     runs-on: ubuntu-latest
     steps:

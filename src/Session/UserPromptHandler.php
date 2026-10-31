@@ -10,15 +10,15 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class UserPromptHandler
+final class UserPromptHandler
 {
     public function __construct(
-        public ?UserPromptHandlerType $alert = null,
-        public ?UserPromptHandlerType $beforeUnload = null,
-        public ?UserPromptHandlerType $confirm = null,
-        public ?UserPromptHandlerType $default = null,
-        public ?UserPromptHandlerType $file = null,
-        public ?UserPromptHandlerType $prompt = null,
+        public readonly ?UserPromptHandlerType $alert = null,
+        public readonly ?UserPromptHandlerType $beforeUnload = null,
+        public readonly ?UserPromptHandlerType $confirm = null,
+        public readonly ?UserPromptHandlerType $default = null,
+        public readonly ?UserPromptHandlerType $file = null,
+        public readonly ?UserPromptHandlerType $prompt = null,
     ) {
     }
 

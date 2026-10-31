@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class StackFrame
+final class StackFrame
 {
     public function __construct(
-        public int $columnNumber,
-        public string $functionName,
-        public int $lineNumber,
-        public string $url,
+        public readonly int $columnNumber,
+        public readonly string $functionName,
+        public readonly int $lineNumber,
+        public readonly string $url,
     ) {
     }
 

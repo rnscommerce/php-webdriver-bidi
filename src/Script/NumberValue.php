@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class NumberValue implements PrimitiveProtocolValue
+final class NumberValue implements PrimitiveProtocolValue
 {
     public function __construct(
-        public int|float|SpecialNumber $value,
+        public readonly int|float|SpecialNumber $value,
     ) {
     }
 

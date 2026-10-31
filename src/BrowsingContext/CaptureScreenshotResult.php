@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class CaptureScreenshotResult
+final class CaptureScreenshotResult
 {
     public function __construct(
-        public string $data,
+        public readonly string $data,
     ) {
     }
 

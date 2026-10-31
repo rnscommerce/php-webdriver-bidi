@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RemovePreloadScriptParameters
+final class RemovePreloadScriptParameters
 {
     public function __construct(
-        public string $script,
+        public readonly string $script,
     ) {
     }
 

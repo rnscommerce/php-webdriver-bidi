@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ChannelValue implements LocalValue
+final class ChannelValue implements LocalValue
 {
     public function __construct(
-        public ChannelProperties $value,
+        public readonly ChannelProperties $value,
     ) {
     }
 

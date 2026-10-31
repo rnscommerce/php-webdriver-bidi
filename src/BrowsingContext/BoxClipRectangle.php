@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class BoxClipRectangle implements ClipRectangle
+final class BoxClipRectangle implements ClipRectangle
 {
     public function __construct(
-        public int|float $x,
-        public int|float $y,
-        public int|float $width,
-        public int|float $height,
+        public readonly int|float $x,
+        public readonly int|float $y,
+        public readonly int|float $width,
+        public readonly int|float $height,
     ) {
     }
 

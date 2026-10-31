@@ -10,7 +10,7 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class AddDataCollectorParameters
+final class AddDataCollectorParameters
 {
     /**
      * @param list<DataType> $dataTypes
@@ -18,11 +18,11 @@ final readonly class AddDataCollectorParameters
      * @param ?list<string> $userContexts
      */
     public function __construct(
-        public array $dataTypes,
-        public int $maxEncodedDataSize,
-        public ?CollectorType $collectorType = null,
-        public ?array $contexts = null,
-        public ?array $userContexts = null,
+        public readonly array $dataTypes,
+        public readonly int $maxEncodedDataSize,
+        public readonly ?CollectorType $collectorType = null,
+        public readonly ?array $contexts = null,
+        public readonly ?array $userContexts = null,
     ) {
     }
 

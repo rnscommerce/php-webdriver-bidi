@@ -10,17 +10,17 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ManualProxyConfiguration implements ProxyConfiguration
+final class ManualProxyConfiguration implements ProxyConfiguration
 {
     /**
      * @param ?list<string> $noProxy
      */
     public function __construct(
-        public string $socksProxy,
-        public int $socksVersion,
-        public ?string $httpProxy = null,
-        public ?string $sslProxy = null,
-        public ?array $noProxy = null,
+        public readonly string $socksProxy,
+        public readonly int $socksVersion,
+        public readonly ?string $httpProxy = null,
+        public readonly ?string $sslProxy = null,
+        public readonly ?array $noProxy = null,
     ) {
     }
 

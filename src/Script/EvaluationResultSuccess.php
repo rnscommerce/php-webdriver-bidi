@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class EvaluationResultSuccess implements EvaluationResult
+final class EvaluationResultSuccess implements EvaluationResult
 {
     public function __construct(
-        public RemoteValue $result,
-        public string $realm,
+        public readonly RemoteValue $result,
+        public readonly string $realm,
     ) {
     }
 

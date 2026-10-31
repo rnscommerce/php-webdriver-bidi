@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class GetDataParameters
+final class GetDataParameters
 {
     public function __construct(
-        public DataType $dataType,
-        public string $request,
-        public ?string $collector = null,
-        public ?bool $disown = null,
+        public readonly DataType $dataType,
+        public readonly string $request,
+        public readonly ?string $collector = null,
+        public readonly ?bool $disown = null,
     ) {
     }
 

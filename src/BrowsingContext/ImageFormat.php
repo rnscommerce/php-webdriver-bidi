@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ImageFormat
+final class ImageFormat
 {
     public function __construct(
-        public string $type,
-        public int|float|null $quality = null,
+        public readonly string $type,
+        public readonly int|float|null $quality = null,
     ) {
     }
 

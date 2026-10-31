@@ -12,15 +12,15 @@ use Rnscommerce\WebDriver\BiDi\Script\Source;
 use Rnscommerce\WebDriver\BiDi\Script\StackTrace;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class GenericLogEntry implements Entry
+final class GenericLogEntry implements Entry
 {
     public function __construct(
-        public Level $level,
-        public Source $source,
-        public ?string $text,
-        public int $timestamp,
-        public string $type,
-        public ?StackTrace $stackTrace = null,
+        public readonly Level $level,
+        public readonly Source $source,
+        public readonly ?string $text,
+        public readonly int $timestamp,
+        public readonly string $type,
+        public readonly ?StackTrace $stackTrace = null,
     ) {
     }
 

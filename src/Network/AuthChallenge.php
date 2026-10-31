@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class AuthChallenge
+final class AuthChallenge
 {
     public function __construct(
-        public string $scheme,
-        public string $realm,
+        public readonly string $scheme,
+        public readonly string $realm,
     ) {
     }
 

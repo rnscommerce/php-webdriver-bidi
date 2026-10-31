@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class SubscribeResult
+final class SubscribeResult
 {
     public function __construct(
-        public string $subscription,
+        public readonly string $subscription,
     ) {
     }
 

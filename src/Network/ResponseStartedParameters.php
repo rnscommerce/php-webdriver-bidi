@@ -10,21 +10,21 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ResponseStartedParameters
+final class ResponseStartedParameters
 {
     /**
      * @param ?list<string> $intercepts
      */
     public function __construct(
-        public ?string $context,
-        public bool $isBlocked,
-        public ?string $navigation,
-        public int $redirectCount,
-        public RequestData $request,
-        public int $timestamp,
-        public ResponseData $response,
-        public ?string $userContext = null,
-        public ?array $intercepts = null,
+        public readonly ?string $context,
+        public readonly bool $isBlocked,
+        public readonly ?string $navigation,
+        public readonly int $redirectCount,
+        public readonly RequestData $request,
+        public readonly int $timestamp,
+        public readonly ResponseData $response,
+        public readonly ?string $userContext = null,
+        public readonly ?array $intercepts = null,
     ) {
     }
 

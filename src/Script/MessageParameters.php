@@ -10,12 +10,12 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class MessageParameters
+final class MessageParameters
 {
     public function __construct(
-        public string $channel,
-        public RemoteValue $data,
-        public Source $source,
+        public readonly string $channel,
+        public readonly RemoteValue $data,
+        public readonly Source $source,
     ) {
     }
 

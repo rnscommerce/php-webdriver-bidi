@@ -10,15 +10,15 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class SetRemoteValue implements RemoteValue
+final class SetRemoteValue implements RemoteValue
 {
     /**
      * @param ?list<RemoteValue> $value
      */
     public function __construct(
-        public ?string $handle = null,
-        public ?string $internalId = null,
-        public ?array $value = null,
+        public readonly ?string $handle = null,
+        public readonly ?string $internalId = null,
+        public readonly ?array $value = null,
     ) {
     }
 

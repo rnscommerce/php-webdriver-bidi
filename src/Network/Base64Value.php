@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class Base64Value implements BytesValue
+final class Base64Value implements BytesValue
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {
     }
 

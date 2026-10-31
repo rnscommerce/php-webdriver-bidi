@@ -10,18 +10,18 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class Cookie
+final class Cookie
 {
     public function __construct(
-        public string $name,
-        public BytesValue $value,
-        public string $domain,
-        public string $path,
-        public int $size,
-        public bool $httpOnly,
-        public bool $secure,
-        public SameSite $sameSite,
-        public ?int $expiry = null,
+        public readonly string $name,
+        public readonly BytesValue $value,
+        public readonly string $domain,
+        public readonly string $path,
+        public readonly int $size,
+        public readonly bool $httpOnly,
+        public readonly bool $secure,
+        public readonly SameSite $sameSite,
+        public readonly ?int $expiry = null,
     ) {
     }
 

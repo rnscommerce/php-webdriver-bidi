@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class PacProxyConfiguration implements ProxyConfiguration
+final class PacProxyConfiguration implements ProxyConfiguration
 {
     public function __construct(
-        public string $proxyAutoconfigUrl,
+        public readonly string $proxyAutoconfigUrl,
     ) {
     }
 

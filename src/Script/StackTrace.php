@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class StackTrace
+final class StackTrace
 {
     /**
      * @param list<StackFrame> $callFrames
      */
     public function __construct(
-        public array $callFrames,
+        public readonly array $callFrames,
     ) {
     }
 

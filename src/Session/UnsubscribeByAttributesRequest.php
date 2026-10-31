@@ -10,13 +10,13 @@ namespace Rnscommerce\WebDriver\BiDi\Session;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class UnsubscribeByAttributesRequest implements UnsubscribeParameters
+final class UnsubscribeByAttributesRequest implements UnsubscribeParameters
 {
     /**
      * @param list<string> $events
      */
     public function __construct(
-        public array $events,
+        public readonly array $events,
     ) {
     }
 

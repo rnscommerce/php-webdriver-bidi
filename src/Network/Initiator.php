@@ -11,14 +11,14 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 use Rnscommerce\WebDriver\BiDi\Script\StackTrace;
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class Initiator
+final class Initiator
 {
     public function __construct(
-        public ?int $columnNumber = null,
-        public ?int $lineNumber = null,
-        public ?string $request = null,
-        public ?StackTrace $stackTrace = null,
-        public ?InitiatorType $type = null,
+        public readonly ?int $columnNumber = null,
+        public readonly ?int $lineNumber = null,
+        public readonly ?string $request = null,
+        public readonly ?StackTrace $stackTrace = null,
+        public readonly ?InitiatorType $type = null,
     ) {
     }
 

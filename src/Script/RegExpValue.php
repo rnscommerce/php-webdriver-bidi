@@ -10,11 +10,11 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RegExpValue
+final class RegExpValue
 {
     public function __construct(
-        public string $pattern,
-        public ?string $flags = null,
+        public readonly string $pattern,
+        public readonly ?string $flags = null,
     ) {
     }
 

@@ -10,22 +10,22 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class NodeProperties
+final class NodeProperties
 {
     /**
      * @param ?array<string, string> $attributes
      * @param ?list<NodeRemoteValue> $children
      */
     public function __construct(
-        public int $nodeType,
-        public int $childNodeCount,
-        public ?array $attributes = null,
-        public ?array $children = null,
-        public ?string $localName = null,
-        public ?NodePropertiesMode $mode = null,
-        public ?string $namespaceURI = null,
-        public ?string $nodeValue = null,
-        public ?NodeRemoteValue $shadowRoot = null,
+        public readonly int $nodeType,
+        public readonly int $childNodeCount,
+        public readonly ?array $attributes = null,
+        public readonly ?array $children = null,
+        public readonly ?string $localName = null,
+        public readonly ?NodePropertiesMode $mode = null,
+        public readonly ?string $namespaceURI = null,
+        public readonly ?string $nodeValue = null,
+        public readonly ?NodeRemoteValue $shadowRoot = null,
     ) {
     }
 

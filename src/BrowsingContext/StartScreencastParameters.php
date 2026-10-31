@@ -10,14 +10,14 @@ namespace Rnscommerce\WebDriver\BiDi\BrowsingContext;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class StartScreencastParameters
+final class StartScreencastParameters
 {
     public function __construct(
-        public string $context,
-        public ?string $destinationFolder = null,
-        public ?string $mimeType = null,
-        public ?MediaTrackConstraints $video = null,
-        public ?bool $audio = null,
+        public readonly string $context,
+        public readonly ?string $destinationFolder = null,
+        public readonly ?string $mimeType = null,
+        public readonly ?MediaTrackConstraints $video = null,
+        public readonly ?bool $audio = null,
     ) {
     }
 

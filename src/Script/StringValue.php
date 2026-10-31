@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class StringValue implements PrimitiveProtocolValue
+final class StringValue implements PrimitiveProtocolValue
 {
     public function __construct(
-        public string $value,
+        public readonly string $value,
     ) {
     }
 

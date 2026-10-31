@@ -10,14 +10,14 @@ namespace Rnscommerce\WebDriver\BiDi\Script;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ExceptionDetails
+final class ExceptionDetails
 {
     public function __construct(
-        public int $columnNumber,
-        public RemoteValue $exception,
-        public int $lineNumber,
-        public StackTrace $stackTrace,
-        public string $text,
+        public readonly int $columnNumber,
+        public readonly RemoteValue $exception,
+        public readonly int $lineNumber,
+        public readonly StackTrace $stackTrace,
+        public readonly string $text,
     ) {
     }
 

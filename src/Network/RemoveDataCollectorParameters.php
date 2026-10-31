@@ -10,10 +10,10 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class RemoveDataCollectorParameters
+final class RemoveDataCollectorParameters
 {
     public function __construct(
-        public string $collector,
+        public readonly string $collector,
     ) {
     }
 

@@ -10,25 +10,25 @@ namespace Rnscommerce\WebDriver\BiDi\Network;
 
 use Rnscommerce\WebDriver\BiDi\Wire;
 
-final readonly class ResponseData
+final class ResponseData
 {
     /**
      * @param list<Header> $headers
      * @param ?list<AuthChallenge> $authChallenges
      */
     public function __construct(
-        public string $url,
-        public string $protocol,
-        public int $status,
-        public string $statusText,
-        public bool $fromCache,
-        public array $headers,
-        public string $mimeType,
-        public int $bytesReceived,
-        public ?int $headersSize,
-        public ?int $bodySize,
-        public ResponseContent $content,
-        public ?array $authChallenges = null,
+        public readonly string $url,
+        public readonly string $protocol,
+        public readonly int $status,
+        public readonly string $statusText,
+        public readonly bool $fromCache,
+        public readonly array $headers,
+        public readonly string $mimeType,
+        public readonly int $bytesReceived,
+        public readonly ?int $headersSize,
+        public readonly ?int $bodySize,
+        public readonly ResponseContent $content,
+        public readonly ?array $authChallenges = null,
     ) {
     }
 

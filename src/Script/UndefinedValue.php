@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Rnscommerce\WebDriver\BiDi\Script;
 
-final readonly class UndefinedValue implements PrimitiveProtocolValue
+final class UndefinedValue implements PrimitiveProtocolValue
 {
     /**
      * @param array<string, mixed> $data
