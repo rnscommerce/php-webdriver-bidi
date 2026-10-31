@@ -425,7 +425,7 @@ final class BiDiTest extends TestCase
             throw new \LogicException('Listener failed');
         });
 
-        $id = $bidi->addListener(new Event('test.other', static fn (): null => null), static function (): void {
+        $id = $bidi->addListener(new Event('test.other', static fn (): mixed => null), static function (): void {
         });
 
         self::assertSame('subscription-1', $id);

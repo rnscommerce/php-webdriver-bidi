@@ -86,7 +86,7 @@ final class Network
         return new Command(
             'network.removeDataCollector',
             $params->toArray(),
-            static fn (array $result): null => null,
+            static fn (array $result): mixed => null,
         );
     }
 }

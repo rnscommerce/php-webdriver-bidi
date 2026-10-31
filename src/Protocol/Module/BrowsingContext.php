@@ -78,7 +78,7 @@ final class BrowsingContext
         return new Command(
             'browsingContext.close',
             $params->toArray(),
-            static fn (array $result): null => null,
+            static fn (array $result): mixed => null,
         );
     }
 

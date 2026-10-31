@@ -35,7 +35,7 @@ final class Session
         return new Command(
             'session.unsubscribe',
             $params->toArray(),
-            static fn (array $result): null => null,
+            static fn (array $result): mixed => null,
         );
     }
 }

@@ -35,7 +35,7 @@ final class Browser
         return new Command(
             'browser.removeUserContext',
             $params->toArray(),
-            static fn (array $result): null => null,
+            static fn (array $result): mixed => null,
         );
     }
 }

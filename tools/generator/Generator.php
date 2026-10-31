@@ -146,7 +146,7 @@ final class Generator
             $result = isset($command['result']) ? $this->resolve(self::node($command['result'])) : null;
             $resultType = $result === null ? 'null' : $this->phpType($result);
             $mapper = $result === null
-                ? 'static fn (array $result): null => null'
+                ? 'static fn (array $result): mixed => null'
                 : $this->reader($result) . '::fromArray(...)';
             $methods[] = <<<PHP
                     /**

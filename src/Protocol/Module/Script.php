@@ -60,7 +60,7 @@ final class Script
         return new Command(
             'script.removePreloadScript',
             $params->toArray(),
-            static fn (array $result): null => null,
+            static fn (array $result): mixed => null,
         );
     }
 }
